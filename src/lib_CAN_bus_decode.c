@@ -83,12 +83,9 @@ static void add_filter(  PCAN_DECODE_PACKET_MANAGER dev, uint16_t id )
              * TODO: Error handle, what if the hardware fails or if   *
              * the hardware runs out of mailboxes?                    */
             dev->filter( id );
-        }
 
-        /* Oh no! We are all out of library filters (different from   *
-         * hardware filters).                                         *
-         * TODO: how shall this be handled by the library?            */
-        else { return; }
+            return;
+        }
     }
 }
 
