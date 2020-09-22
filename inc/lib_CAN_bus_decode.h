@@ -4,6 +4,7 @@
 
 #include "stdio.h"
 #include "lib_pid.h"
+#include "lib_unit_conversion.h"
 
 #define NUM_CAN_DECODE 25
 
