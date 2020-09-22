@@ -161,22 +161,22 @@ void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration
 			{
 				case DECODE_ENGINE_RRPM_ID:
 					/* Engine RPM */
-					if( dev->stream[i]->pid == MODE1_ENGINE_RPM )
+					if( (dev->stream[i]->pid == MODE1_ENGINE_RPM) && (dev->stream[i]->mode == MODE1) )
 						dev->stream[i]->pid_value = (float)(((uint32_t)(packet_data[4] & 0xF) << 8) | (uint32_t)(packet_data[5])) * (float)2;
 					break;
 
 				case DECODE_ACCEL_PEDAL_POS_ID:
 					/* Accelerator Pedal */
-					if( dev->stream[i]->pid == DECODE_ACCEL_PEDAL_POS_PID )
+					if( (dev->stream[i]->pid == MODE1_REL_ACCELERATOR_PEDAL_POS) && (dev->stream[i]->mode == MODE1) )
 						dev->stream[i]->pid_value = (float)(((uint32_t)(packet_data[0] & 0x3) << 8) | (uint32_t)(packet_data[1])) / (float)10;
 					break;
 				case DECODE_ENGINE_OIL_TEMP_ID:
 					/* Engine Oil Temperature */
-					if( dev->stream[i]->pid == DECODE_ENGINE_OIL_TEMP_PID )
+					if( (dev->stream[i]->pid == MODE1_ENGINE_OIL_TEMPERATURE) && (dev->stream[i]->mode == MODE1) )
 						dev->stream[i]->pid_value = (float)packet_data[7] - (float)60;
 
 					/* Boost Pressure */
-					else if( dev->stream[i]->pid == DECODE_BOOST_PRESSURE_PID )
+					else if( (dev->stream[i]->pid == MODE1_TURBO_INLET_PRESSURE) && (dev->stream[i]->mode == MODE1) )
 						dev->stream[i]->pid_value = (float)packet_data[5];
 					break;
 			}
