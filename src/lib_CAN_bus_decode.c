@@ -53,6 +53,10 @@ PID_SUPPORTED_STATUS CAN_Decode_Supported( PTR_PID_DATA pid )
         #ifdef DECODE_BOOST_PRESSURE_PID
 		case DECODE_BOOST_PRESSURE_PID:
         #endif
+
+        #ifdef DECODE_GAUGE_BRIGHTNESS_PID
+        case DECODE_GAUGE_BRIGHTNESS_PID:
+        #endif
             return PID_SUPPORTED;
 
         default:
@@ -126,6 +130,12 @@ PID_SUPPORTED_STATUS CAN_Decode_Add_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID
 				add_filter( dev, DECODE_BOOST_PRESSURE_ID );
 				break;
 			#endif
+
+            #ifdef DECODE_GAUGE_BRIGHTNESS_PID
+            case DECODE_GAUGE_BRIGHTNESS_PID:
+                add_filter( dev, DECODE_GAUGE_BRIGHTNESS_ID );
+                break;
+            #endif
 		}
 
 		dev->stream[dev->num_pids] = pid;
@@ -190,6 +200,11 @@ void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration
 						convert( dev, i );
 					}
 					break;
+
+				case DECODE_GAUGE_BRIGHTNESS_ID:
+				    if( (dev->stream[i]->pid == DECODE_GAUGE_BRIGHTNESS) && (dev->stream[i]->mode == DECODE) )
+				        dev->stream[i]->pid_value = (float)packet_data[0]; /* TODO: THIS IS NOT NORMALIZED YET */
+				    break;
 			}
     	}
     }
