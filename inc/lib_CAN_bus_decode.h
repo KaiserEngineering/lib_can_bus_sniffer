@@ -43,12 +43,6 @@ typedef struct _can_decode_packet_manager {
 	/* Number of PIDs being streamed */
     uint8_t num_pids;
 
-    /* PID requested */
-    uint16_t pid_request[NUM_CAN_DECODE];
-
-    /* Float value of the PID */
-    float pid_results[NUM_CAN_DECODE];
-
     /* Callback to add a CAN bus filter */
     CAN_DECODE_FILTER filter;
 
