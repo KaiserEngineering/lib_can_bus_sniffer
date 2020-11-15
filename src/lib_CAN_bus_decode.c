@@ -160,12 +160,6 @@ void CAN_Decode_Remove_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID_DATA pid )
     }
 }
 
-static void convert( PCAN_DECODE_PACKET_MANAGER dev, uint8_t i )
-{
-    if( dev->stream[i]->pid_unit != get_pid_base_unit( dev->stream[i]->mode, dev->stream[i]->pid ) )
-        dev->stream[i]->pid_value = convert_units( get_pid_base_unit( dev->stream[i]->mode, dev->stream[i]->pid ), dev->stream[i]->pid_unit, dev->stream[i]->pid_value );
-}
-
 void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration_id, uint8_t* packet_data )
 {
 	/* Check all of the PIDs */
@@ -191,13 +185,11 @@ void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration
 					/* Engine Oil Temperature */
 					if( (dev->stream[i]->pid == MODE1_ENGINE_OIL_TEMPERATURE) && (dev->stream[i]->mode == MODE1) ) {
 					    dev->stream[i]->pid_value = (float)packet_data[7] - (float)60;
-					    convert( dev, i );
 					}
 
 					/* Boost Pressure */
 					else if( (dev->stream[i]->pid == MODE1_TURBO_INLET_PRESSURE) && (dev->stream[i]->mode == MODE1) ) {
 						dev->stream[i]->pid_value = (float)packet_data[5];
-						convert( dev, i );
 					}
 					break;
 
