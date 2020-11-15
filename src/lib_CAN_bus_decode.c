@@ -23,10 +23,9 @@ void CAN_Decode_Initialize( PCAN_DECODE_PACKET_MANAGER dev )
     for( uint8_t i = 0; i < MAX_NUM_FILTERS; i++ )
     	active_filters[i] = RESERVED_FILTER;
 
+    /* Set the stream pointer to NULL */
     for( uint8_t i = 0; i < NUM_CAN_DECODE; i++ )
-    {
     	dev->stream[i] = NULL;
-    }
 
     /* Verify the CAN bus filter callback has been assigned */
     if( dev->filter != NULL )
