@@ -110,30 +110,35 @@ PID_SUPPORTED_STATUS CAN_Decode_Add_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID
 			#ifdef DECODE_ENGINE_RPM_PID
 			case DECODE_ENGINE_RPM_PID:
 				add_filter( dev, DECODE_ENGINE_RRPM_ID );
+				pid->base_unit = PID_UNITS_RPM;
 				break;
 			#endif
 
 			#ifdef DECODE_ACCEL_PEDAL_POS_PID
 			case DECODE_ACCEL_PEDAL_POS_PID:
 				add_filter( dev, DECODE_ACCEL_PEDAL_POS_ID );
+				pid->base_unit = PID_UNITS_PERCENT;
 				break;
 			#endif
 
 			#ifdef DECODE_ENGINE_OIL_TEMP_PID
 			case DECODE_ENGINE_OIL_TEMP_PID:
 				add_filter( dev, DECODE_ENGINE_OIL_TEMP_ID );
+				pid->base_unit = PID_UNITS_CELCIUS;
 				break;
 			#endif
 
 			#ifdef DECODE_BOOST_PRESSURE_PID
 			case DECODE_BOOST_PRESSURE_PID:
 				add_filter( dev, DECODE_BOOST_PRESSURE_ID );
+				pid->base_unit = PID_UNITS_KPA;
 				break;
 			#endif
 
             #ifdef DECODE_GAUGE_BRIGHTNESS_PID
             case DECODE_GAUGE_BRIGHTNESS_PID:
                 add_filter( dev, DECODE_GAUGE_BRIGHTNESS_ID );
+                pid->base_unit = PID_UNITS_PERCENT;
                 break;
             #endif
 		}
