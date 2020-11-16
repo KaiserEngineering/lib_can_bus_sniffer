@@ -32,41 +32,6 @@ void CAN_Decode_Initialize( PCAN_DECODE_PACKET_MANAGER dev )
 		dev->status |= CAN_DECODE_INIT;
 }
 
-/* Verify that that the PID is supported. */
-PID_SUPPORTED_STATUS CAN_Decode_Supported( PTR_PID_DATA pid )
-{
-    switch( pid->pid )
-    {
-        #ifdef FORD_FOCUS_STRS_2013_2018
-
-        #ifdef DECODE_ENGINE_RPM_PID
-		case DECODE_ENGINE_RPM_PID:
-        #endif
-
-        #ifdef DECODE_ACCEL_PEDAL_POS_PID
-		case DECODE_ACCEL_PEDAL_POS_PID:
-        #endif
-
-        #ifdef DECODE_ENGINE_OIL_TEMP_PID
-		case DECODE_ENGINE_OIL_TEMP_PID:
-        #endif
-
-        #ifdef DECODE_BOOST_PRESSURE_PID
-		case DECODE_BOOST_PRESSURE_PID:
-        #endif
-
-        #ifdef DECODE_GAUGE_BRIGHTNESS_PID
-        case DECODE_GAUGE_BRIGHTNESS_PID:
-        #endif
-            return PID_SUPPORTED;
-
-        #endif
-
-        default:
-            return PID_NOT_SUPPORTED;
-    }
-}
-
 /* Ties the CAN bus hardware peripheral to the library and will       *
  * optimize CAN bus filter usage and ensure only one filter is used   *
  * per arbitration ID.                                                */
@@ -96,6 +61,50 @@ static void add_filter( PCAN_DECODE_PACKET_MANAGER dev, uint16_t id )
 
             return;
         }
+    }
+}
+
+void CAN_Decode_Remove_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID_DATA pid )
+{
+    for( uint8_t i = 0; i < dev->num_pids; i++ )
+    {
+        if( dev->stream[i] == pid )
+            dev->stream[i] = NULL;
+    }
+}
+
+/* Verify that that the PID is supported. */
+PID_SUPPORTED_STATUS CAN_Decode_Supported( PTR_PID_DATA pid )
+{
+    switch( pid->pid )
+    {
+        #ifdef FORD_FOCUS_STRS_2013_2018
+
+        #ifdef DECODE_ENGINE_RPM_PID
+        case DECODE_ENGINE_RPM_PID:
+        #endif
+
+        #ifdef DECODE_ACCEL_PEDAL_POS_PID
+        case DECODE_ACCEL_PEDAL_POS_PID:
+        #endif
+
+        #ifdef DECODE_ENGINE_OIL_TEMP_PID
+        case DECODE_ENGINE_OIL_TEMP_PID:
+        #endif
+
+        #ifdef DECODE_BOOST_PRESSURE_PID
+        case DECODE_BOOST_PRESSURE_PID:
+        #endif
+
+        #ifdef DECODE_GAUGE_BRIGHTNESS_PID
+        case DECODE_GAUGE_BRIGHTNESS_PID:
+        #endif
+            return PID_SUPPORTED;
+
+        #endif
+
+        default:
+            return PID_NOT_SUPPORTED;
     }
 }
 
@@ -163,15 +172,6 @@ PID_SUPPORTED_STATUS CAN_Decode_Add_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID
 
 	/* This PID is not supported, no filters were added */
 	else { return PID_NOT_SUPPORTED; }
-}
-
-void CAN_Decode_Remove_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID_DATA pid )
-{
-    for( uint8_t i = 0; i < dev->num_pids; i++ )
-    {
-    	if( dev->stream[i] == pid )
-    		dev->stream[i] = NULL;
-    }
 }
 
 void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration_id, uint8_t* packet_data )
