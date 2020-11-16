@@ -111,7 +111,7 @@ PID_SUPPORTED_STATUS CAN_Decode_Add_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID
 
 			#ifdef DECODE_ENGINE_RPM_PID
 			case DECODE_ENGINE_RPM_PID:
-				add_filter( dev, DECODE_ENGINE_RRPM_ID );
+				add_filter( dev, DECODE_ENGINE_RPM_ID );
 				pid->base_unit = PID_UNITS_RPM;
 				break;
 			#endif
@@ -177,7 +177,7 @@ void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration
 			switch( arbitration_id )
 			{
                 #ifdef DECODE_ENGINE_RPM_PID
-				case DECODE_ENGINE_RRPM_ID:
+				case DECODE_ENGINE_RPM_ID:
 					/* Engine RPM */
 					if( (dev->stream[i]->pid == MODE1_ENGINE_RPM) && (dev->stream[i]->mode == MODE1) )
 						dev->stream[i]->pid_value = (float)(((uint32_t)(packet_data[4] & 0xF) << 8) | (uint32_t)(packet_data[5])) * (float)2;
