@@ -26,11 +26,6 @@
 typedef void (*CAN_DECODE_FLAG_UPDATE)( uint16_t flag, uint8_t bit );
 typedef void (*CAN_DECODE_FILTER)( uint16_t id );
 
-typedef enum _can_bus_decode {
-    CAN_DECODE_IDLE,
-    CAN_DECODE_NEW_DATA
-} CAN_BUS_DECODE, *PCAN_BUS_DECODE;
-
 typedef enum _pid_supported_status {
     PID_NOT_SUPPORTED,
     PID_SUPPORTED
