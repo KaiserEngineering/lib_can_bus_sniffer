@@ -37,6 +37,8 @@ PID_SUPPORTED_STATUS CAN_Decode_Supported( PTR_PID_DATA pid )
 {
     switch( pid->pid )
     {
+        #ifdef FORD_FOCUS_STRS_2013_2018
+
         #ifdef DECODE_ENGINE_RPM_PID
 		case DECODE_ENGINE_RPM_PID:
         #endif
@@ -57,6 +59,8 @@ PID_SUPPORTED_STATUS CAN_Decode_Supported( PTR_PID_DATA pid )
         case DECODE_GAUGE_BRIGHTNESS_PID:
         #endif
             return PID_SUPPORTED;
+
+        #endif
 
         default:
             return PID_NOT_SUPPORTED;
@@ -108,6 +112,7 @@ PID_SUPPORTED_STATUS CAN_Decode_Add_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID
 		 * obtain the PID data.	                                      */
 		switch( pid->pid )
 		{
+            #ifdef FORD_FOCUS_STRS_2013_2018
 
 			#ifdef DECODE_ENGINE_RPM_PID
 			case DECODE_ENGINE_RPM_PID:
@@ -143,6 +148,8 @@ PID_SUPPORTED_STATUS CAN_Decode_Add_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID
                 pid->base_unit = PID_UNITS_PERCENT;
                 break;
             #endif
+
+            #endif
 		}
 
 		dev->stream[dev->num_pids] = pid;
@@ -176,6 +183,8 @@ void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration
     	{
 			switch( arbitration_id )
 			{
+                #ifdef FORD_FOCUS_STRS_2013_2018
+
                 #ifdef DECODE_ENGINE_RPM_PID
 				case DECODE_ENGINE_RPM_ID:
 					/* Engine RPM */
@@ -211,6 +220,8 @@ void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration
 				    if( (dev->stream[i]->pid == DECODE_GAUGE_BRIGHTNESS) && (dev->stream[i]->mode == DECODE) )
 				        dev->stream[i]->pid_value = (float)packet_data[0]; /* TODO: THIS IS NOT NORMALIZED YET */
 				    break;
+                #endif
+
                 #endif
 			}
     	}
