@@ -74,6 +74,7 @@ PID_SUPPORTED_STATUS CAN_Decode_Add_PID(  PCAN_DECODE_PACKET_MANAGER dev, PTR_PI
 float CAN_Decode_Get_Value_Byte_PID( PCAN_DECODE_PACKET_MANAGER dev, uint16_t pid );
 void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration_id, uint8_t* packet_data );
 void CAN_Decode_Initialize( PCAN_DECODE_PACKET_MANAGER dev );
+void CAN_Decode_tick( void );
 
 
 

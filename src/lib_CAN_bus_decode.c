@@ -12,6 +12,8 @@
 uint16_t active_filters[MAX_NUM_FILTERS];
 #define RESERVED_FILTER 0xFFFF
 
+uint32_t decode_tick = 0;
+
 /* Initialize variables to a known state and verify the proper callbacks have been  *
  * assigned.                                                                        */
 void CAN_Decode_Initialize( PCAN_DECODE_PACKET_MANAGER dev )
@@ -181,6 +183,8 @@ void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration
     {
     	if( dev->stream[i] != NULL )
     	{
+            uint8_t timestamp_flag = 1;
+
 			switch( arbitration_id )
 			{
                 #ifdef FORD_FOCUS_STRS_2013_2018
@@ -223,7 +227,19 @@ void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration
                 #endif
 
                 #endif
+
+                default:
+                    timestamp_flag = 0;
+                    break;
+
+                if( timestamp_flag )
+                    dev->stream[i]->timestamp = decode_tick;
 			}
     	}
     }
+}
+
+void CAN_Decode_tick( void )
+{
+    decode_tick++;
 }
