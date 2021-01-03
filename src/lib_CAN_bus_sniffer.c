@@ -239,7 +239,7 @@ void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration
     }
 }
 
-void CAN_Decode_tick( void )
+void CAN_Sniffer_tick( void )
 {
     decode_tick++;
 }
