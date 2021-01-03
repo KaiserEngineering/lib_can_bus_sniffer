@@ -76,7 +76,7 @@ void CAN_Decode_Remove_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID_DATA pid )
 }
 
 /* Verify that that the PID is supported. */
-PID_SUPPORTED_STATUS CAN_Decode_Supported( PTR_PID_DATA pid )
+PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported( PTR_PID_DATA pid )
 {
     switch( pid->pid )
     {
@@ -117,7 +117,7 @@ PID_SUPPORTED_STATUS CAN_Decode_Supported( PTR_PID_DATA pid )
 PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID_DATA pid )
 {
 	/* Check to see if the PID can be decoded by the library          */
-	if( CAN_Decode_Supported( pid ) == PID_SUPPORTED )
+	if( CAN_Sniffer_PID_Supported( pid ) == PID_SUPPORTED )
 	{
 		/* Determine what arbitration ID needs to be monitored to     *
 		 * obtain the PID data.	                                      */

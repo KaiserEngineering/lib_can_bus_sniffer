@@ -69,7 +69,7 @@ typedef struct _can_decode_packet_manager {
 
 } CAN_DECODE_PACKET_MANAGER, *PCAN_DECODE_PACKET_MANAGER;
 
-PID_SUPPORTED_STATUS CAN_Decode_Supported( PTR_PID_DATA pid );
+PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported( PTR_PID_DATA pid );
 PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID(  PCAN_DECODE_PACKET_MANAGER dev, PTR_PID_DATA pid );
 void CAN_Sniffer_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration_id, uint8_t* packet_data );
 void CAN_Sniffer_Initialize( PCAN_DECODE_PACKET_MANAGER dev );
