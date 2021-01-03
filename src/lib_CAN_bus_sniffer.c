@@ -66,15 +66,6 @@ static void add_filter( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t id )
     }
 }
 
-void CAN_Decode_Remove_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_PID_DATA pid )
-{
-    for( uint8_t i = 0; i < dev->num_pids; i++ )
-    {
-        if( dev->stream[i] == pid )
-            dev->stream[i] = NULL;
-    }
-}
-
 /* Verify that that the PID is supported. */
 PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported( PTR_PID_DATA pid )
 {
