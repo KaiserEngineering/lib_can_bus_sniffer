@@ -1,5 +1,5 @@
 /* Author : Matthew Kaiser */
-/* @Description: Library to decode proprietary data from the CAN bus of a vehicle and *
+/* @Description: Library to sniff proprietary data from the CAN bus of a vehicle and  *
  * relate it to standard OBD-II parameters (PIDs). The library will require access to *
  * the hardware peripheral's filter configuration and the main loop shall pass the    *
  * relevant packets to the library when received. The library will update the PID     *
@@ -12,11 +12,11 @@
 uint16_t active_filters[MAX_NUM_FILTERS];
 #define RESERVED_FILTER 0xFFFF
 
-uint32_t decode_tick = 0;
+uint32_t sniffer_tick = 0;
 
 /* Initialize variables to a known state and verify the proper callbacks have been  *
  * assigned.                                                                        */
-void CAN_Sniffer_Initialize( PCAN_DECODE_PACKET_MANAGER dev )
+void CAN_Sniffer_Initialize( PCAN_SNIFFER_PACKET_MANAGER dev )
 {
 	/* Clear the PID count */
     dev->num_pids = 0;
@@ -26,20 +26,20 @@ void CAN_Sniffer_Initialize( PCAN_DECODE_PACKET_MANAGER dev )
     	active_filters[i] = RESERVED_FILTER;
 
     /* Set the stream pointer to NULL */
-    for( uint8_t i = 0; i < NUM_CAN_DECODE; i++ )
+    for( uint8_t i = 0; i < NUM_CAN_SNIFF; i++ )
     	dev->stream[i] = NULL;
 
     /* Verify the CAN bus filter callback has been assigned */
     if( dev->filter != NULL )
-		dev->status |= CAN_DECODE_INIT;
+		dev->status |= CAN_SNIFF_INIT;
 }
 
 /* Ties the CAN bus hardware peripheral to the library and will       *
  * optimize CAN bus filter usage and ensure only one filter is used   *
  * per arbitration ID.                                                */
-static void add_filter( PCAN_DECODE_PACKET_MANAGER dev, uint16_t id )
+static void add_filter( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t id )
 {
-    if( (dev->status & CAN_DECODE_INIT) == 0 )
+    if( (dev->status & CAN_SNIFF_INIT) == 0 )
         return;
 
     /* Check what filters are currently active */
@@ -66,7 +66,7 @@ static void add_filter( PCAN_DECODE_PACKET_MANAGER dev, uint16_t id )
     }
 }
 
-void CAN_Decode_Remove_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID_DATA pid )
+void CAN_Decode_Remove_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_PID_DATA pid )
 {
     for( uint8_t i = 0; i < dev->num_pids; i++ )
     {
@@ -82,24 +82,24 @@ PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported( PTR_PID_DATA pid )
     {
         #ifdef FORD_FOCUS_STRS_2013_2018
 
-        #ifdef DECODE_ENGINE_RPM_PID
-        case DECODE_ENGINE_RPM_PID:
+        #ifdef SNIFF_ENGINE_RPM_PID
+        case SNIFF_ENGINE_RPM_PID:
         #endif
 
-        #ifdef DECODE_ACCEL_PEDAL_POS_PID
-        case DECODE_ACCEL_PEDAL_POS_PID:
+        #ifdef SNIFF_ACCEL_PEDAL_POS_PID
+        case SNIFF_ACCEL_PEDAL_POS_PID:
         #endif
 
-        #ifdef DECODE_ENGINE_OIL_TEMP_PID
-        case DECODE_ENGINE_OIL_TEMP_PID:
+        #ifdef SNIFF_ENGINE_OIL_TEMP_PID
+        case SNIFF_ENGINE_OIL_TEMP_PID:
         #endif
 
-        #ifdef DECODE_BOOST_PRESSURE_PID
-        case DECODE_BOOST_PRESSURE_PID:
+        #ifdef SNIFF_BOOST_PRESSURE_PID
+        case SNIFF_BOOST_PRESSURE_PID:
         #endif
 
-        #ifdef DECODE_GAUGE_BRIGHTNESS_PID
-        case DECODE_GAUGE_BRIGHTNESS_PID:
+        #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
+        case SNIFF_GAUGE_BRIGHTNESS_PID:
         #endif
             return PID_SUPPORTED;
 
@@ -114,9 +114,9 @@ PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported( PTR_PID_DATA pid )
  * @PID_SUPPORTED_STATUS to verify if the PID was or was not added.   *
  * Upon adding a supported PID, the library will request a hardware   *
  * filter if necessary (see add_filter)                               */
-PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID_DATA pid )
+PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_PID_DATA pid )
 {
-	/* Check to see if the PID can be decoded by the library          */
+	/* Check to see if the PID can be sniffed by the library          */
 	if( CAN_Sniffer_PID_Supported( pid ) == PID_SUPPORTED )
 	{
 		/* Determine what arbitration ID needs to be monitored to     *
@@ -125,37 +125,37 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PI
 		{
             #ifdef FORD_FOCUS_STRS_2013_2018
 
-			#ifdef DECODE_ENGINE_RPM_PID
-			case DECODE_ENGINE_RPM_PID:
-				add_filter( dev, DECODE_ENGINE_RPM_ID );
+			#ifdef SNIFF_ENGINE_RPM_PID
+			case SNIFF_ENGINE_RPM_PID:
+				add_filter( dev, SNIFF_ENGINE_RPM_ID );
 				pid->base_unit = PID_UNITS_RPM;
 				break;
 			#endif
 
-			#ifdef DECODE_ACCEL_PEDAL_POS_PID
-			case DECODE_ACCEL_PEDAL_POS_PID:
-				add_filter( dev, DECODE_ACCEL_PEDAL_POS_ID );
+			#ifdef SNIFF_ACCEL_PEDAL_POS_PID
+			case SNIFF_ACCEL_PEDAL_POS_PID:
+				add_filter( dev, SNIFF_ACCEL_PEDAL_POS_ID );
 				pid->base_unit = PID_UNITS_PERCENT;
 				break;
 			#endif
 
-			#ifdef DECODE_ENGINE_OIL_TEMP_PID
-			case DECODE_ENGINE_OIL_TEMP_PID:
-				add_filter( dev, DECODE_ENGINE_OIL_TEMP_ID );
+			#ifdef SNIFF_ENGINE_OIL_TEMP_PID
+			case SNIFF_ENGINE_OIL_TEMP_PID:
+				add_filter( dev, SNIFF_ENGINE_OIL_TEMP_ID );
 				pid->base_unit = PID_UNITS_CELCIUS;
 				break;
 			#endif
 
-			#ifdef DECODE_BOOST_PRESSURE_PID
-			case DECODE_BOOST_PRESSURE_PID:
-				add_filter( dev, DECODE_BOOST_PRESSURE_ID );
+			#ifdef SNIFF_BOOST_PRESSURE_PID
+			case SNIFF_BOOST_PRESSURE_PID:
+				add_filter( dev, SNIFF_BOOST_PRESSURE_ID );
 				pid->base_unit = PID_UNITS_KPA;
 				break;
 			#endif
 
-            #ifdef DECODE_GAUGE_BRIGHTNESS_PID
-            case DECODE_GAUGE_BRIGHTNESS_PID:
-                add_filter( dev, DECODE_GAUGE_BRIGHTNESS_ID );
+            #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
+            case SNIFF_GAUGE_BRIGHTNESS_PID:
+                add_filter( dev, SNIFF_GAUGE_BRIGHTNESS_ID );
                 pid->base_unit = PID_UNITS_PERCENT;
                 break;
             #endif
@@ -176,7 +176,7 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PI
 	else { return PID_NOT_SUPPORTED; }
 }
 
-void CAN_Sniffer_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration_id, uint8_t* packet_data )
+void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitration_id, uint8_t* packet_data )
 {
 	/* Check all of the PIDs */
     for( uint8_t i = 0; i < dev->num_pids; i++ )
@@ -189,24 +189,24 @@ void CAN_Sniffer_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitratio
 			{
                 #ifdef FORD_FOCUS_STRS_2013_2018
 
-                #ifdef DECODE_ENGINE_RPM_PID
-				case DECODE_ENGINE_RPM_ID:
+                #ifdef SNIFF_ENGINE_RPM_PID
+				case SNIFF_ENGINE_RPM_ID:
 					/* Engine RPM */
 					if( (dev->stream[i]->pid == MODE1_ENGINE_RPM) && (dev->stream[i]->mode == MODE1) )
 						dev->stream[i]->pid_value = (float)(((uint32_t)(packet_data[4] & 0xF) << 8) | (uint32_t)(packet_data[5])) * (float)2;
 					break;
                 #endif
 
-                #ifdef DECODE_ACCEL_PEDAL_POS_PID
-				case DECODE_ACCEL_PEDAL_POS_ID:
+                #ifdef SNIFF_ACCEL_PEDAL_POS_PID
+				case SNIFF_ACCEL_PEDAL_POS_ID:
 					/* Accelerator Pedal */
 					if( (dev->stream[i]->pid == MODE1_REL_ACCELERATOR_PEDAL_POS) && (dev->stream[i]->mode == MODE1) )
 						dev->stream[i]->pid_value = (float)(((uint32_t)(packet_data[0] & 0x3) << 8) | (uint32_t)(packet_data[1])) / (float)10;
 					break;
                 #endif
 
-                #ifdef DECODE_ENGINE_OIL_TEMP_PID
-				case DECODE_ENGINE_OIL_TEMP_ID:
+                #ifdef SNIFF_ENGINE_OIL_TEMP_PID
+				case SNIFF_ENGINE_OIL_TEMP_ID:
 					/* Engine Oil Temperature */
 					if( (dev->stream[i]->pid == MODE1_ENGINE_OIL_TEMPERATURE) && (dev->stream[i]->mode == MODE1) ) {
 					    dev->stream[i]->pid_value = (float)packet_data[7] - (float)60;
@@ -219,9 +219,9 @@ void CAN_Sniffer_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitratio
 					break;
                 #endif
 
-                #ifdef DECODE_GAUGE_BRIGHTNESS_PID
-				case DECODE_GAUGE_BRIGHTNESS_ID:
-				    if( (dev->stream[i]->pid == DECODE_GAUGE_BRIGHTNESS) && (dev->stream[i]->mode == DECODE) )
+                #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
+				case SNIFF_GAUGE_BRIGHTNESS_ID:
+				    if( (dev->stream[i]->pid == SNIFF_GAUGE_BRIGHTNESS) && (dev->stream[i]->mode == SNIFF) )
 				        dev->stream[i]->pid_value = (float)packet_data[0]; /* TODO: THIS IS NOT NORMALIZED YET */
 				    break;
                 #endif
@@ -234,12 +234,12 @@ void CAN_Sniffer_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitratio
 			}
 
             if( timestamp_flag )
-                dev->stream[i]->timestamp = decode_tick;
+                dev->stream[i]->timestamp = sniffer_tick;
     	}
     }
 }
 
 void CAN_Sniffer_tick( void )
 {
-    decode_tick++;
+    sniffer_tick++;
 }
