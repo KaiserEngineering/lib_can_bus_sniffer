@@ -16,7 +16,7 @@ uint32_t decode_tick = 0;
 
 /* Initialize variables to a known state and verify the proper callbacks have been  *
  * assigned.                                                                        */
-void CAN_Decode_Initialize( PCAN_DECODE_PACKET_MANAGER dev )
+void CAN_Sniffer_Initialize( PCAN_DECODE_PACKET_MANAGER dev )
 {
 	/* Clear the PID count */
     dev->num_pids = 0;
