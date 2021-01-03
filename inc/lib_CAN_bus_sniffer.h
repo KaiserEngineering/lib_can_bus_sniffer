@@ -1,6 +1,6 @@
 /* Author : Matthew Kaiser */
-#ifndef LIB_CAN_BUS_DECODE_H_
-#define LIB_CAN_BUS_DECODE_H_
+#ifndef LIB_CAN_BUS_SNIFFER_H_
+#define LIB_CAN_BUS_SNIFFER_H_
 
 #include "stdio.h"
 #include "lib_pid.h"

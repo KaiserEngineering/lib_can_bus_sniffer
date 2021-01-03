@@ -4,7 +4,7 @@
  * the hardware peripheral's filter configuration and the main loop shall pass the    *
  * relevant packets to the library when received. The library will update the PID     *
  * pointer value as it receives new data.                                             */
-#include "lib_CAN_bus_decode.h"
+#include "lib_CAN_bus_sniffer.h"
 
 /* Number of filters that are supported for the library, this can be different than *
  * the number of filters supported by the hardware.                                 */
