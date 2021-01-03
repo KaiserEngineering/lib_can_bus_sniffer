@@ -231,10 +231,10 @@ void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration
                 default:
                     timestamp_flag = 0;
                     break;
-
-                if( timestamp_flag )
-                    dev->stream[i]->timestamp = decode_tick;
 			}
+
+            if( timestamp_flag )
+                dev->stream[i]->timestamp = decode_tick;
     	}
     }
 }
