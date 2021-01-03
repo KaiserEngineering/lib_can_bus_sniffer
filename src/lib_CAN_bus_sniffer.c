@@ -176,7 +176,7 @@ PID_SUPPORTED_STATUS CAN_Decode_Add_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID
 	else { return PID_NOT_SUPPORTED; }
 }
 
-void CAN_Decode_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration_id, uint8_t* packet_data )
+void CAN_Sniffer_Add_Packet( PCAN_DECODE_PACKET_MANAGER dev, uint16_t arbitration_id, uint8_t* packet_data )
 {
 	/* Check all of the PIDs */
     for( uint8_t i = 0; i < dev->num_pids; i++ )
