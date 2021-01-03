@@ -114,7 +114,7 @@ PID_SUPPORTED_STATUS CAN_Decode_Supported( PTR_PID_DATA pid )
  * @PID_SUPPORTED_STATUS to verify if the PID was or was not added.   *
  * Upon adding a supported PID, the library will request a hardware   *
  * filter if necessary (see add_filter)                               */
-PID_SUPPORTED_STATUS CAN_Decode_Add_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID_DATA pid )
+PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_DECODE_PACKET_MANAGER dev, PTR_PID_DATA pid )
 {
 	/* Check to see if the PID can be decoded by the library          */
 	if( CAN_Decode_Supported( pid ) == PID_SUPPORTED )
