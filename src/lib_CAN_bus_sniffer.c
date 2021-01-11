@@ -213,7 +213,7 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                 #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
 				case SNIFF_GAUGE_BRIGHTNESS_ID:
 				    if( (dev->stream[i]->pid == SNIFF_GAUGE_BRIGHTNESS) && (dev->stream[i]->mode == SNIFF) )
-				        dev->stream[i]->pid_value = (float)packet_data[0]; /* TODO: THIS IS NOT NORMALIZED YET */
+				        dev->stream[i]->pid_value = (float)(packet_data[0] & 0x1F);
 				    break;
                 #endif
 
