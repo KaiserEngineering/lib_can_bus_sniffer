@@ -47,7 +47,6 @@
 
 #endif
 
-typedef void (*CAN_SNIFF_FLAG_UPDATE)( uint16_t flag, uint8_t bit );
 typedef void (*CAN_SNIFF_FILTER)( uint16_t id );
 
 typedef enum _pid_supported_status {
