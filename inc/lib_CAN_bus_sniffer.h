@@ -69,7 +69,8 @@ typedef struct _can_sniffer_packet_manager {
 } CAN_SNIFFER_PACKET_MANAGER, *PCAN_SNIFFER_PACKET_MANAGER;
 
 PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported( PTR_PID_DATA pid );
-PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID(  PCAN_SNIFFER_PACKET_MANAGER dev, PTR_PID_DATA pid );
+PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_PID_DATA pid );
+PID_SUPPORTED_STATUS CAN_Sniffer_Remove_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_PID_DATA pid );
 void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitration_id, uint8_t* packet_data );
 void CAN_Sniffer_Initialize( PCAN_SNIFFER_PACKET_MANAGER dev );
 void CAN_Sniffer_tick( void );

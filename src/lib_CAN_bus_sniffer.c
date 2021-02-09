@@ -167,6 +167,30 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_P
 	else { return PID_NOT_SUPPORTED; }
 }
 
+PID_SUPPORTED_STATUS CAN_Sniffer_Remove_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_PID_DATA pid )
+{
+    /* Cycle through all the PIDs to find which one must be removed */
+    for( uint8_t i = 0; i < dev->num_pids; i++ )
+    {
+        /* If found, pop that pointer reference */
+        if( dev->stream[i] == pid )
+        {
+            if( dev->num_pids > 1 )
+            {
+                for( uint8_t j = i + 1; j < dev->num_pids; j++ )
+                {
+                    dev->stream[j - 1] = dev->stream[j];
+                }
+            }
+
+            /* Remove the PID */
+            dev->num_pids--;
+        }
+    }
+
+    return PID_SUPPORTED;
+}
+
 void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitration_id, uint8_t* packet_data )
 {
 	/* Check all of the PIDs */
