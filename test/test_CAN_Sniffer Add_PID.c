@@ -38,3 +38,12 @@ void test_add_oil_temp_stream(void)
     TEST_ASSERT_EQUAL( MODE1 , sniffer.stream[0]->mode );
 }
 
+void test_add_turbo_inlet_pressure_stream(void)
+{
+    PID_SUPPORTED_STATUS status = 0xFF;
+    PID_DATA pid_req = { .pid = MODE1_TURBO_INLET_PRESSURE, .mode = MODE1, .pid_unit = PID_UNITS_KPA };
+    status = CAN_Sniffer_Add_PID( &sniffer, &pid_req );
+    TEST_ASSERT_EQUAL( PID_SUPPORTED , status );
+    TEST_ASSERT_EQUAL( MODE1_TURBO_INLET_PRESSURE , sniffer.stream[0]->pid );
+    TEST_ASSERT_EQUAL( MODE1 , sniffer.stream[0]->mode );
+}
