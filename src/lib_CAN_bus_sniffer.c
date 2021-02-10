@@ -185,7 +185,7 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Remove_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PT
                 for( uint8_t j = i + 1; j < dev->num_pids; j++ )
                 {
                     dev->stream[j - 1] = dev->stream[j];
-                    lib_pid_clear_PID( dev->stream[j] );
+                    dev->stream[j] = NULL;
                 }
             }
 
