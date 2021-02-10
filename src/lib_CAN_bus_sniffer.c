@@ -34,6 +34,11 @@ void CAN_Sniffer_Initialize( PCAN_SNIFFER_PACKET_MANAGER dev )
 		dev->status |= CAN_SNIFF_INIT;
 }
 
+PTR_PID_DATA lib_can_bus_sniffer_get_stream_by_index( PCAN_SNIFFER_PACKET_MANAGER dev, uint8_t index )
+{
+    return dev->stream[index];
+}
+
 /* Ties the CAN bus hardware peripheral to the library and will       *
  * optimize CAN bus filter usage and ensure only one filter is used   *
  * per arbitration ID.                                                */
