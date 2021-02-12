@@ -175,17 +175,15 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_P
 PID_SUPPORTED_STATUS CAN_Sniffer_Remove_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_PID_DATA pid )
 {
     /* Cycle through all the PIDs to find which one must be removed */
-    for( uint8_t i = 0; i < dev->num_pids; i++ )
+    for( uint8_t index = 0; index < dev->num_pids; index++ )
     {
         /* If found, pop that pointer reference */
-        if( dev->stream[i] == pid )
+        if( dev->stream[index] == pid )
         {
             if( dev->num_pids > 1 )
             {
-                for( uint8_t j = i + 1; j < dev->num_pids; j++ )
-                {
-                    dev->stream[j - 1] = dev->stream[j];
-                    dev->stream[j] = NULL;
+                for( uint8_t i = index; index < dev->num_pids; index++ ) {
+                    dev->stream[i] = dev->stream[i + 1];
                 }
             }
 
