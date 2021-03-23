@@ -196,7 +196,7 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Remove_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PT
     return PID_SUPPORTED;
 }
 
-void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitration_id, uint8_t* packet_data )
+void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitration_id, uint8_t* data )
 {
 	/* Check all of the PIDs */
     for( uint8_t i = 0; i < dev->num_pids; i++ )
@@ -212,16 +212,16 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                 #ifdef SNIFF_ENGINE_RPM_PID
 				case SNIFF_ENGINE_RPM_ID:
 					/* Engine RPM */
-					if( (dev->stream[i]->pid == MODE1_ENGINE_RPM) && (dev->stream[i]->mode == MODE1) )
-						dev->stream[i]->pid_value = (float)(((uint32_t)(packet_data[4] & 0xF) << 8) | (uint32_t)(packet_data[5])) * (float)2;
+					if( (dev->stream[i]->pid == MODE1_ENGINE_SPEED) && (dev->stream[i]->mode == MODE1) )
+						dev->stream[i]->pid_value = (float)(((uint32_t)(data[4] & 0xF) << 8) | (uint32_t)(data[5])) * (float)2;
 					break;
                 #endif
 
                 #ifdef SNIFF_ACCEL_PEDAL_POS_PID
 				case SNIFF_ACCEL_PEDAL_POS_ID:
 					/* Accelerator Pedal */
-					if( (dev->stream[i]->pid == MODE1_REL_ACCELERATOR_PEDAL_POS) && (dev->stream[i]->mode == MODE1) )
-						dev->stream[i]->pid_value = (float)(((uint32_t)(packet_data[0] & 0x3) << 8) | (uint32_t)(packet_data[1])) / (float)10;
+					if( (dev->stream[i]->pid == MODE1_RELATIVE_ACCELERATOR_PEDAL_POSITION) && (dev->stream[i]->mode == MODE1) )
+						dev->stream[i]->pid_value = (float)(((uint32_t)(data[0] & 0x3) << 8) | (uint32_t)(data[1])) / (float)10;
 					break;
                 #endif
 
@@ -229,12 +229,12 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 				case SNIFF_ENGINE_OIL_TEMP_ID:
 					/* Engine Oil Temperature */
 					if( (dev->stream[i]->pid == MODE1_ENGINE_OIL_TEMPERATURE) && (dev->stream[i]->mode == MODE1) ) {
-					    dev->stream[i]->pid_value = (float)packet_data[7] - (float)60;
+					    dev->stream[i]->pid_value = (float)data[7] - (float)60;
 					}
 
 					/* Boost Pressure */
-					else if( (dev->stream[i]->pid == MODE1_TURBO_INLET_PRESSURE) && (dev->stream[i]->mode == MODE1) ) {
-						dev->stream[i]->pid_value = (float)packet_data[5];
+					else if( (dev->stream[i]->pid == MODE1_TURBOCHARGER_COMPRESSOR_INLET_PRESSURE) && (dev->stream[i]->mode == MODE1) ) {
+						dev->stream[i]->pid_value = (float)data[5];
 					}
 					break;
                 #endif
@@ -242,7 +242,7 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                 #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
 				case SNIFF_GAUGE_BRIGHTNESS_ID:
 				    if( (dev->stream[i]->pid == SNIFF_GAUGE_BRIGHTNESS) && (dev->stream[i]->mode == SNIFF) )
-				        dev->stream[i]->pid_value = (float)(packet_data[0] & 0x1F);
+				        dev->stream[i]->pid_value = (float)(data[0] & 0x1F);
 				    break;
                 #endif
 
