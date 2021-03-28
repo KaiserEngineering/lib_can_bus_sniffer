@@ -121,35 +121,35 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_P
 		{
             #ifdef FORD_FOCUS_STRS_2013_2018
 
-			#ifdef SNIFF_ENGINE_RPM_PID
+			#if defined(SNIFF_ENGINE_RPM_PID) || !defined(LIMIT_PIDS)
 			case SNIFF_ENGINE_RPM_PID:
 				add_filter( dev, SNIFF_ENGINE_RPM_ID );
 				pid->base_unit = PID_UNITS_RPM;
 				break;
 			#endif
 
-			#ifdef SNIFF_ACCEL_PEDAL_POS_PID
+			#if defined(SNIFF_ACCEL_PEDAL_POS_PID) || !defined(LIMIT_PIDS)
 			case SNIFF_ACCEL_PEDAL_POS_PID:
 				add_filter( dev, SNIFF_ACCEL_PEDAL_POS_ID );
 				pid->base_unit = PID_UNITS_PERCENT;
 				break;
 			#endif
 
-			#ifdef SNIFF_ENGINE_OIL_TEMP_PID
+			#if defined(SNIFF_ENGINE_OIL_TEMP_PID) || !defined(LIMIT_PIDS)
 			case SNIFF_ENGINE_OIL_TEMP_PID:
 				add_filter( dev, SNIFF_ENGINE_OIL_TEMP_ID );
 				pid->base_unit = PID_UNITS_CELCIUS;
 				break;
 			#endif
 
-			#ifdef SNIFF_BOOST_PRESSURE_PID
+			#if defined(SNIFF_BOOST_PRESSURE_PID) || !defined(LIMIT_PIDS)
 			case SNIFF_BOOST_PRESSURE_PID:
 				add_filter( dev, SNIFF_BOOST_PRESSURE_ID );
 				pid->base_unit = PID_UNITS_KPA;
 				break;
 			#endif
 
-            #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
+            #if defined(SNIFF_GAUGE_BRIGHTNESS_PID) || !defined(LIMIT_PIDS)
             case SNIFF_GAUGE_BRIGHTNESS_PID:
                 add_filter( dev, SNIFF_GAUGE_BRIGHTNESS_ID );
                 pid->base_unit = PID_UNITS_PERCENT;
