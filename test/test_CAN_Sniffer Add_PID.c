@@ -55,7 +55,7 @@ void test_add_turbo_inlet_pressure_stream(void)
     status = 0xFF;
     
     /* Parameter 0 = Turbo inlet pressure */
-    stream[0].pid      = MODE1_TURBO_INLET_PRESSURE;
+    stream[0].pid      = MODE1_TURBOCHARGER_COMPRESSOR_INLET_PRESSURE;
     stream[0].mode     = MODE1;
     stream[0].pid_unit = PID_UNITS_CELCIUS;
 
@@ -64,7 +64,7 @@ void test_add_turbo_inlet_pressure_stream(void)
 
     /* Verify it was added to the correct slot */
     TEST_ASSERT_EQUAL( PID_SUPPORTED , status );
-    TEST_ASSERT_EQUAL( MODE1_TURBO_INLET_PRESSURE , sniffer.stream[0]->pid );
+    TEST_ASSERT_EQUAL( MODE1_TURBOCHARGER_COMPRESSOR_INLET_PRESSURE , sniffer.stream[0]->pid );
     TEST_ASSERT_EQUAL( MODE1 , sniffer.stream[0]->mode );
 }
 
@@ -80,7 +80,7 @@ void test_add_multiple_to_stream(void)
     stream[0].pid_unit = PID_UNITS_CELCIUS;
 
     /* Parameter 1 = Turbo inlet pressure */
-    stream[1].pid      = MODE1_TURBO_INLET_PRESSURE;
+    stream[1].pid      = MODE1_TURBOCHARGER_COMPRESSOR_INLET_PRESSURE;
     stream[1].mode     = MODE1;
     stream[1].pid_unit = PID_UNITS_CELCIUS;
 
@@ -93,7 +93,7 @@ void test_add_multiple_to_stream(void)
     status = CAN_Sniffer_Add_PID( &sniffer, &stream[1] );
 
     TEST_ASSERT_EQUAL( PID_SUPPORTED , status );
-    TEST_ASSERT_EQUAL( MODE1_TURBO_INLET_PRESSURE , sniffer.stream[1]->pid );
+    TEST_ASSERT_EQUAL( MODE1_TURBOCHARGER_COMPRESSOR_INLET_PRESSURE , sniffer.stream[1]->pid );
     TEST_ASSERT_EQUAL( MODE1 , sniffer.stream[1]->mode );
 }
 
@@ -109,7 +109,7 @@ void test_remove_PID_from_stream_and_add(void)
     stream[0].pid_unit = PID_UNITS_CELCIUS;
 
     /* Parameter 1 = Turbo inlet pressure */
-    stream[1].pid      = MODE1_TURBO_INLET_PRESSURE;
+    stream[1].pid      = MODE1_TURBOCHARGER_COMPRESSOR_INLET_PRESSURE;
     stream[1].mode     = MODE1;
     stream[1].pid_unit = PID_UNITS_KPA;
 
@@ -131,7 +131,7 @@ void test_remove_PID_from_stream_and_add(void)
     status = CAN_Sniffer_Add_PID( &sniffer, &stream[1] );
 
     TEST_ASSERT_EQUAL( PID_SUPPORTED , status );
-    TEST_ASSERT_EQUAL( MODE1_TURBO_INLET_PRESSURE , sniffer.stream[1]->pid );
+    TEST_ASSERT_EQUAL( MODE1_TURBOCHARGER_COMPRESSOR_INLET_PRESSURE , sniffer.stream[1]->pid );
     TEST_ASSERT_EQUAL( MODE1 , sniffer.stream[1]->mode );
 
     /* Add Gauge Brightness */
@@ -158,6 +158,6 @@ void test_remove_PID_from_stream_and_add(void)
     status = CAN_Sniffer_Add_PID( &sniffer, &stream[1] );
 
     TEST_ASSERT_EQUAL( PID_SUPPORTED , status );
-    TEST_ASSERT_EQUAL( MODE1_TURBO_INLET_PRESSURE , sniffer.stream[2]->pid );
+    TEST_ASSERT_EQUAL( MODE1_TURBOCHARGER_COMPRESSOR_INLET_PRESSURE , sniffer.stream[2]->pid );
     TEST_ASSERT_EQUAL( MODE1 , sniffer.stream[2]->mode );
 }
