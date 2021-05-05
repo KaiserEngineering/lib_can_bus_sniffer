@@ -40,6 +40,11 @@
     #define SNIFF_GAUGE_BRIGHTNESS_ID      0xC8
     #endif
 
+    #if defined(SNIFF_VEHICLE_STATUS_PID) || !defined(LIMIT_PIDS)
+    #define SNIFF_VEHICLE_STATUS_PID     SNIFF_VEHICLE_STATUS
+    #define SNIFF_VEHICLE_STATUS_ID      0x260
+    #endif
+
     #if defined(MODE1_VEHICLE_SPEED_SUPPORTED) || !defined(LIMIT_PIDS)
     #define SNIFF_VEHICLE_SPEED_PID        MODE1_VEHICLE_SPEED
     #define SNIFF_VEHICLE_SPEED_ID         0x130

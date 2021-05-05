@@ -97,6 +97,10 @@ PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported( PTR_PID_DATA pid )
         #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
         case SNIFF_GAUGE_BRIGHTNESS_PID:
         #endif
+
+        #ifdef SNIFF_VEHICLE_STATUS_PID
+        case SNIFF_VEHICLE_STATUS_PID:
+        #endif
             return PID_SUPPORTED;
 
         #endif
@@ -153,6 +157,13 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_P
             case SNIFF_GAUGE_BRIGHTNESS_PID:
                 add_filter( dev, SNIFF_GAUGE_BRIGHTNESS_ID );
                 pid->base_unit = PID_UNITS_PERCENT;
+                break;
+            #endif
+
+            #if defined(SNIFF_VEHICLE_STATUS_PID) || !defined(LIMIT_PIDS)
+            case SNIFF_VEHICLE_STATUS_PID:
+                add_filter( dev, SNIFF_VEHICLE_STATUS_ID );
+                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
                 break;
             #endif
 
@@ -244,6 +255,13 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 				    if( (dev->stream[i]->pid == SNIFF_GAUGE_BRIGHTNESS) && (dev->stream[i]->mode == SNIFF) )
 				        dev->stream[i]->pid_value = (float)(data[0] & 0x1F);
 				    break;
+                #endif
+
+                #ifdef SNIFF_VEHICLE_STATUS_PID
+                case SNIFF_VEHICLE_STATUS_ID:
+                    if( (dev->stream[i]->pid == SNIFF_VEHICLE_STATUS) && (dev->stream[i]->mode == SNIFF) )
+                        dev->stream[i]->pid_value = (float)((((uint32_t)data[5] & 0x1)));;
+                    break;
                 #endif
 
                 #endif
