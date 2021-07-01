@@ -74,35 +74,61 @@ static void add_filter( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t id )
 /* Verify that that the PID is supported. */
 PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported( PTR_PID_DATA pid )
 {
-    switch( pid->pid )
+    switch( pid->mode )
     {
-        #ifdef FORD_FOCUS_STRS_2013_2018
+        case MODE1:
+            switch( pid->pid )
+            {
+                #ifdef FORD_FOCUS_STRS_2013_2018
 
-        #ifdef SNIFF_ENGINE_RPM_PID
-        case SNIFF_ENGINE_RPM_PID:
-        #endif
+                #ifdef SNIFF_ENGINE_RPM_PID
+                case SNIFF_ENGINE_RPM_PID:
+                #endif
 
-        #ifdef SNIFF_ACCEL_PEDAL_POS_PID
-        case SNIFF_ACCEL_PEDAL_POS_PID:
-        #endif
+                #ifdef SNIFF_ACCEL_PEDAL_POS_PID
+                case SNIFF_ACCEL_PEDAL_POS_PID:
+                #endif
 
-        #ifdef SNIFF_ENGINE_OIL_TEMP_PID
-        case SNIFF_ENGINE_OIL_TEMP_PID:
-        #endif
+                #ifdef SNIFF_ENGINE_OIL_TEMP_PID
+                case SNIFF_ENGINE_OIL_TEMP_PID:
+                #endif
 
-        #ifdef SNIFF_BOOST_PRESSURE_PID
-        case SNIFF_BOOST_PRESSURE_PID:
-        #endif
+                #ifdef SNIFF_BOOST_PRESSURE_PID
+                case SNIFF_BOOST_PRESSURE_PID:
+                #endif
 
-        #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
-        case SNIFF_GAUGE_BRIGHTNESS_PID:
-        #endif
-            return PID_SUPPORTED;
+                #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
+                case SNIFF_GAUGE_BRIGHTNESS_PID:
+                #endif
+                    return PID_SUPPORTED;
 
-        #endif
+                #endif
 
-        default:
-            return PID_NOT_SUPPORTED;
+                default:
+                    return PID_NOT_SUPPORTED;
+            }
+            break;
+
+            case SNIFF:
+                switch( pid->pid )
+                {
+                    #ifdef FORD_FOCUS_STRS_2013_2018
+
+                    #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
+                    case SNIFF_GAUGE_BRIGHTNESS_PID:
+                    #endif
+                        return PID_SUPPORTED;
+
+                    #endif
+
+                    default:
+                        return PID_NOT_SUPPORTED;
+                }
+                break;
+
+            default:
+                return PID_NOT_SUPPORTED;
+
     }
 }
 
