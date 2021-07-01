@@ -164,7 +164,7 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_P
 			#if defined(SNIFF_ENGINE_OIL_TEMP_PID) || !defined(LIMIT_PIDS)
 			case SNIFF_ENGINE_OIL_TEMP_PID:
 				add_filter( dev, SNIFF_ENGINE_OIL_TEMP_ID );
-				pid->base_unit = PID_UNITS_CELCIUS;
+				pid->base_unit = PID_UNITS_CELSIUS;
 				break;
 			#endif
 
