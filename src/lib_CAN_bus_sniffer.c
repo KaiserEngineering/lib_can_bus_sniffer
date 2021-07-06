@@ -117,6 +117,43 @@ PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported( PTR_PID_DATA pid )
                     #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
                     case SNIFF_GAUGE_BRIGHTNESS_PID:
                     #endif
+
+                    #ifdef SNIFF_BRAKE_PEDAL_STATUS_PID
+                    case SNIFF_BRAKE_PEDAL_STATUS_PID:
+                    #endif
+
+                    #ifdef SNIFF_EMERGENCY_BRAKE_STATUS_PID
+                    case SNIFF_EMERGENCY_BRAKE_STATUS_PID:
+                    #endif
+
+                    #ifdef SNIFF_REVERSE_STATUS_PID
+                    case SNIFF_REVERSE_STATUS_PID:
+                    #endif
+
+                    #ifdef SNIFF_CRUISE_CONTROL_ON_BUTTON_PID
+                    case SNIFF_CRUISE_CONTROL_ON_BUTTON_PID:
+                    #endif
+
+                    #ifdef SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID
+                    case SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID:
+                    #endif
+
+                    #ifdef SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID
+                    case SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID:
+                    #endif
+
+                    #ifdef SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID
+                    case SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID:
+                    #endif
+
+                    #ifdef SNIFF_CRUISE_CONTROL_RES_BUTTON_PID
+                    case SNIFF_CRUISE_CONTROL_RES_BUTTON_PID:
+                    #endif
+
+                    #ifdef SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID
+                    case SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID:
+                    #endif
+
                         return PID_SUPPORTED;
 
                     #endif
@@ -182,6 +219,69 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_P
                 break;
             #endif
 
+            #if defined(SNIFF_BRAKE_PEDAL_STATUS_PID) || !defined(LIMIT_PIDS)
+            case SNIFF_BRAKE_PEDAL_STATUS_PID:
+                add_filter( dev, SNIFF_BRAKE_PEDAL_STATUS_ID );
+                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                break;
+            #endif
+
+            #if defined(SNIFF_EMERGENCY_BRAKE_STATUS_PID) || !defined(LIMIT_PIDS)
+            case SNIFF_EMERGENCY_BRAKE_STATUS_PID:
+                add_filter( dev, SNIFF_EMERGENCY_BRAKE_STATUS_ID );
+                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                break;
+            #endif
+
+            #if defined(SNIFF_REVERSE_STATUS_PID) || !defined(LIMIT_PIDS)
+            case SNIFF_REVERSE_STATUS_PID:
+                add_filter( dev, SNIFF_REVERSE_STATUS_ID );
+                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                break;
+            #endif
+
+            #if defined(SNIFF_CRUISE_CONTROL_ON_BUTTON_PID) || !defined(LIMIT_PIDS)
+            case SNIFF_CRUISE_CONTROL_ON_BUTTON_PID:
+                add_filter( dev, SNIFF_CRUISE_CONTROL_ON_BUTTON_ID );
+                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                break;
+            #endif
+
+            #if defined(SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID) || !defined(LIMIT_PIDS)
+            case SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID:
+                add_filter( dev, SNIFF_CRUISE_CONTROL_OFF_BUTTON_ID );
+                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                break;
+            #endif
+
+            #if defined(SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID) || !defined(LIMIT_PIDS)
+            case SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID:
+                add_filter( dev, SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_ID );
+                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                break;
+            #endif
+
+            #if defined(SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID) || !defined(LIMIT_PIDS)
+            case SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID:
+                add_filter( dev, SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_ID );
+                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                break;
+            #endif
+
+            #if defined(SNIFF_CRUISE_CONTROL_RES_BUTTON_PID) || !defined(LIMIT_PIDS)
+            case SNIFF_CRUISE_CONTROL_RES_BUTTON_PID:
+                add_filter( dev, SNIFF_CRUISE_CONTROL_RES_BUTTON_ID );
+                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                break;
+            #endif
+
+            #if defined(SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID) || !defined(LIMIT_PIDS)
+            case SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID:
+                add_filter( dev, SNIFF_CRUISE_CONTROL_CAN_BUTTON_ID );
+                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                break;
+            #endif
+
             #endif
 		}
 
@@ -236,23 +336,36 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                 #ifdef FORD_FOCUS_STRS_2013_2018
 
                 #ifdef SNIFF_ENGINE_RPM_PID
-				case SNIFF_ENGINE_RPM_ID:
+				case 0x090:
 					/* Engine RPM */
 					if( (dev->stream[i]->pid == MODE1_ENGINE_SPEED) && (dev->stream[i]->mode == MODE1) )
 						dev->stream[i]->pid_value = (float)(((uint32_t)(data[4] & 0xF) << 8) | (uint32_t)(data[5])) * (float)2;
 					break;
                 #endif
 
-                #ifdef SNIFF_ACCEL_PEDAL_POS_PID
-				case SNIFF_ACCEL_PEDAL_POS_ID:
+                #if defined(SNIFF_ACCEL_PEDAL_POS_PID)    || \
+                    defined(SNIFF_BRAKE_PEDAL_STATUS_PID) || \
+                    defined(SNIFF_REVERSE_STATUS_PID)
+				case 0x080:
+
 					/* Accelerator Pedal */
 					if( (dev->stream[i]->pid == MODE1_RELATIVE_ACCELERATOR_PEDAL_POSITION) && (dev->stream[i]->mode == MODE1) )
 						dev->stream[i]->pid_value = (float)(((uint32_t)(data[0] & 0x3) << 8) | (uint32_t)(data[1])) / (float)10;
+
+					/* Brake Pedal Status */
+					else if( (dev->stream[i]->pid == SNIFF_BRAKE_PEDAL_STATUS) && (dev->stream[i]->mode == SNIFF) )
+                        dev->stream[i]->pid_value = (float)((data[0] & 0x04) > 0);
+
+                    /* Reverse Status */
+                    else if( (dev->stream[i]->pid == SNIFF_REVERSE_STATUS_PID) && (dev->stream[i]->mode == SNIFF) )
+                        dev->stream[i]->pid_value = (float)((data[0] & 0x20) > 0);
+
 					break;
                 #endif
 
-                #ifdef SNIFF_ENGINE_OIL_TEMP_PID
-				case SNIFF_ENGINE_OIL_TEMP_ID:
+                #if defined(SNIFF_ENGINE_OIL_TEMP_PID) || \
+                    defined(SNIFF_BOOST_PRESSURE_PID)
+				case 0x0F8:
 					/* Engine Oil Temperature */
 					if( (dev->stream[i]->pid == MODE1_ENGINE_OIL_TEMPERATURE) && (dev->stream[i]->mode == MODE1) ) {
 					    dev->stream[i]->pid_value = (float)data[7] - (float)60;
@@ -262,14 +375,66 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 					else if( (dev->stream[i]->pid == MODE1_TURBOCHARGER_COMPRESSOR_INLET_PRESSURE) && (dev->stream[i]->mode == MODE1) ) {
 						dev->stream[i]->pid_value = (float)data[5];
 					}
+
 					break;
                 #endif
 
-                #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
-				case SNIFF_GAUGE_BRIGHTNESS_ID:
-				    if( (dev->stream[i]->pid == SNIFF_GAUGE_BRIGHTNESS) && (dev->stream[i]->mode == SNIFF) )
+                #if defined(SNIFF_GAUGE_BRIGHTNESS_PID) || \
+					defined(SNIFF_EMERGENCY_BRAKE_STATUS_PID)
+				case 0x0C8:
+
+				    /* Gauge Brightness */
+				    if( (dev->stream[i]->pid == SNIFF_GAUGE_BRIGHTNESS) && (dev->stream[i]->mode == SNIFF) ) {
 				        dev->stream[i]->pid_value = (float)(data[0] & 0x1F);
+				    }
+
+                    /* E-brake Status */
+                    else if( (dev->stream[i]->pid == SNIFF_EMERGENCY_BRAKE_STATUS) && (dev->stream[i]->mode == SNIFF) ) {
+                        dev->stream[i]->pid_value = (float)((data[3] & 0x40) > 0);
+                    }
+
 				    break;
+                #endif
+
+                #if defined(SNIFF_CRUISE_CONTROL_ON_BUTTON_PID)        || \
+                    defined(SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID)       || \
+                    defined(SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID)  || \
+                    defined(SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID) || \
+                    defined(SNIFF_CRUISE_CONTROL_RES_BUTTON_PID)       || \
+                    defined(SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID)
+                case 0x030:
+
+                    /* Cruise Control OFF button Status */
+                    if( (dev->stream[i]->pid == SNIFF_CRUISE_CONTROL_ON_BUTTON) && (dev->stream[i]->mode == SNIFF) ) {
+                        dev->stream[i]->pid_value = (float)((data[5] & 0x01) > 0);
+                    }
+
+                    /* Cruise Control ON Button Status */
+                    else if( (dev->stream[i]->pid == SNIFF_CRUISE_CONTROL_OFF_BUTTON) && (dev->stream[i]->mode == SNIFF) ) {
+                        dev->stream[i]->pid_value = (float)((data[5] & 0x02) > 0);
+                    }
+
+                    /* Cruise Control SET+ Button Status */
+                    else if( (dev->stream[i]->pid == SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON) && (dev->stream[i]->mode == SNIFF) ) {
+                        dev->stream[i]->pid_value = (float)((data[5] & 0x80) > 0);
+                    }
+
+                    /* Cruise Control SET- Button Status */
+                    else if( (dev->stream[i]->pid == SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON) && (dev->stream[i]->mode == SNIFF) ) {
+                        dev->stream[i]->pid_value = (float)((data[4] & 0x01) > 0);
+                    }
+
+                    /* Cruise Control RES Button Status */
+                    else if( (dev->stream[i]->pid == SNIFF_CRUISE_CONTROL_RES_BUTTON) && (dev->stream[i]->mode == SNIFF) ) {
+                        dev->stream[i]->pid_value = (float)((data[5] & 0x20) > 0);
+                    }
+
+                    /* Cruise Control CAN Button Status */
+                    else if( (dev->stream[i]->pid == SNIFF_CRUISE_CONTROL_CAN_BUTTON) && (dev->stream[i]->mode == SNIFF) ) {
+                        dev->stream[i]->pid_value = (float)((data[5] & 0x10) > 0);
+                    }
+
+                    break;
                 #endif
 
                 #endif
