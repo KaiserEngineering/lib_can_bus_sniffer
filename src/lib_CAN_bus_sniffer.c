@@ -222,63 +222,63 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_P
             #if defined(SNIFF_BRAKE_PEDAL_STATUS_PID) || !defined(LIMIT_PIDS)
             case SNIFF_BRAKE_PEDAL_STATUS_PID:
                 add_filter( dev, SNIFF_BRAKE_PEDAL_STATUS_ID );
-                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_EMERGENCY_BRAKE_STATUS_PID) || !defined(LIMIT_PIDS)
             case SNIFF_EMERGENCY_BRAKE_STATUS_PID:
                 add_filter( dev, SNIFF_EMERGENCY_BRAKE_STATUS_ID );
-                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_REVERSE_STATUS_PID) || !defined(LIMIT_PIDS)
             case SNIFF_REVERSE_STATUS_PID:
                 add_filter( dev, SNIFF_REVERSE_STATUS_ID );
-                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_CRUISE_CONTROL_ON_BUTTON_PID) || !defined(LIMIT_PIDS)
             case SNIFF_CRUISE_CONTROL_ON_BUTTON_PID:
                 add_filter( dev, SNIFF_CRUISE_CONTROL_ON_BUTTON_ID );
-                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID) || !defined(LIMIT_PIDS)
             case SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID:
                 add_filter( dev, SNIFF_CRUISE_CONTROL_OFF_BUTTON_ID );
-                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID) || !defined(LIMIT_PIDS)
             case SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID:
                 add_filter( dev, SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_ID );
-                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID) || !defined(LIMIT_PIDS)
             case SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID:
                 add_filter( dev, SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_ID );
-                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_CRUISE_CONTROL_RES_BUTTON_PID) || !defined(LIMIT_PIDS)
             case SNIFF_CRUISE_CONTROL_RES_BUTTON_PID:
                 add_filter( dev, SNIFF_CRUISE_CONTROL_RES_BUTTON_ID );
-                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID) || !defined(LIMIT_PIDS)
             case SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID:
                 add_filter( dev, SNIFF_CRUISE_CONTROL_CAN_BUTTON_ID );
-                pid->base_unit = PID_UNITS_NOT_APPLICABLE;
+                pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
