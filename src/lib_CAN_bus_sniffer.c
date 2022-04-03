@@ -154,6 +154,14 @@ PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported( PTR_PID_DATA pid )
                     case SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID:
                     #endif
 
+                    #ifdef SNIFF_LATERAL_ACCELERATION_PID
+                    case SNIFF_LATERAL_ACCELERATION_PID:
+                    #endif
+
+                    #ifdef SNIFF_LONGITUDINAL_ACCELERATION_PID
+                    case SNIFF_LONGITUDINAL_ACCELERATION_PID:
+                    #endif
+
                         return PID_SUPPORTED;
 
                     #endif
@@ -279,6 +287,20 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_P
             case SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID:
                 add_filter( dev, SNIFF_CRUISE_CONTROL_CAN_BUTTON_ID );
                 pid->base_unit = PID_UNITS_NONE;
+                break;
+            #endif
+
+            #if defined(SNIFF_LONGITUDINAL_ACCELERATION_SUPPORTED) || !defined(LIMIT_PIDS)
+            case SNIFF_LATERAL_ACCELERATION_PID:
+                add_filter( dev, SNIFF_LATERAL_ACCELERATION_ID );
+                pid->base_unit = PID_UNITS_G_FORCE;
+                break;
+            #endif
+
+            #if defined(SNIFF_LONGITUDINAL_ACCELERATION_SUPPORTED) || !defined(LIMIT_PIDS)
+            case SNIFF_LONGITUDINAL_ACCELERATION_PID:
+                add_filter( dev, SNIFF_LONGITUDINAL_ACCELERATION_ID );
+                pid->base_unit = PID_UNITS_G_FORCE;
                 break;
             #endif
 
@@ -434,6 +456,22 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                         dev->stream[i]->pid_value = (float)((data[5] & 0x10) > 0);
                     }
 
+                    break;
+                #endif
+
+                #ifdef SNIFF_LONGITUDINAL_ACCELERATION_PID
+                case 0x160:
+                    /* Longitudinal Acceleration */
+                    if( (dev->stream[i]->pid == SNIFF_LONGITUDINAL_ACCELERATION) && (dev->stream[i]->mode == SNIFF) )
+                        dev->stream[i]->pid_value = (float)(((((uint32_t)(data[6] & 0x3) << 8) | (uint32_t)(data[7])) * (float)0.00390625) - 2);
+                    break;
+                #endif
+
+                #ifdef SNIFF_LATERAL_ACCELERATION_PID
+                case 0x180:
+                    /* Lateral Acceleration */
+                    if( (dev->stream[i]->pid == SNIFF_LATERAL_ACCELERATION) && (dev->stream[i]->mode == SNIFF) )
+                        dev->stream[i]->pid_value = (float)(((((uint32_t)(data[2] & 0x3) << 8) | (uint32_t)(data[3])) * (float)0.00390625) - 2);
                     break;
                 #endif
 
