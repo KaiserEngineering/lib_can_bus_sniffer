@@ -463,7 +463,8 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                 case 0x160:
                     /* Longitudinal Acceleration */
                     if( (dev->stream[i]->pid == SNIFF_LONGITUDINAL_ACCELERATION) && (dev->stream[i]->mode == SNIFF) )
-                        dev->stream[i]->pid_value = (float)(((((uint32_t)(data[6] & 0x3) << 8) | (uint32_t)(data[7])) * (float)0.00390625) - 2);
+                        if( ((data[6] & 0x3) != 0x3) & (data[7] != 0xFF) )
+                            dev->stream[i]->pid_value = (float)(((((uint32_t)(data[6] & 0x3) << 8) | (uint32_t)(data[7])) * (float)0.00390625) - 2);
                     break;
                 #endif
 
@@ -471,7 +472,8 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                 case 0x180:
                     /* Lateral Acceleration */
                     if( (dev->stream[i]->pid == SNIFF_LATERAL_ACCELERATION) && (dev->stream[i]->mode == SNIFF) )
-                        dev->stream[i]->pid_value = (float)(((((uint32_t)(data[2] & 0x3) << 8) | (uint32_t)(data[3])) * (float)0.00390625) - 2);
+                        if( ((data[2] & 0x3) != 0x3) & (data[3] != 0xFF) )
+                            dev->stream[i]->pid_value = (float)(((((uint32_t)(data[2] & 0x3) << 8) | (uint32_t)(data[3])) * (float)0.00390625) - 2);
                     break;
                 #endif
 
