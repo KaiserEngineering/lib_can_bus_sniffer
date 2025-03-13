@@ -484,8 +484,10 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                     break;
 			}
 
-            if( timestamp_flag )
+            if( timestamp_flag ) {
                 dev->stream[i]->timestamp = sniffer_tick;
+                convert_units( dev->stream[i]->base_unit, dev->stream[i]->pid_unit, &dev->stream[i]->pid_value);
+            }
     	}
     }
 }
