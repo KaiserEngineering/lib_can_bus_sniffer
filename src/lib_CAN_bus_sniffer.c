@@ -8,8 +8,10 @@
 
 /* Number of filters that are supported for the library, this can be different than *
  * the number of filters supported by the hardware.                                 */
-#define MAX_NUM_FILTERS 25
-uint16_t active_filters[MAX_NUM_FILTERS];
+#ifndef MAX_CAN_FILTERS
+#define MAX_CAN_FILTERS 25
+#endif
+uint16_t active_filters[MAX_CAN_FILTERS];
 #define RESERVED_FILTER 0xFFFF
 
 uint32_t sniffer_tick = 0;
@@ -22,7 +24,7 @@ void CAN_Sniffer_Initialize( PCAN_SNIFFER_PACKET_MANAGER dev )
     dev->num_pids = 0;
 
     /* Clear the active filters */
-    for( uint8_t i = 0; i < MAX_NUM_FILTERS; i++ )
+    for( uint8_t i = 0; i < MAX_CAN_FILTERS; i++ )
     	active_filters[i] = RESERVED_FILTER;
 
     /* Set the stream pointer to NULL */
@@ -48,7 +50,7 @@ static void add_filter( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t id )
         return;
 
     /* Check what filters are currently active */
-    for( uint8_t i = 0; i < MAX_NUM_FILTERS; i++ )
+    for( uint8_t i = 0; i < MAX_CAN_FILTERS; i++ )
     {
         /* If the filter ID is already present, then there is no need  *
          * to add another filter. So we can break out of this function */
