@@ -97,6 +97,14 @@ static void remove_filter( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t id )
     }
 }
 
+static void config_filter( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t id, uint8_t enable )
+{
+	if(enable)
+		add_filter(dev, id);
+	else
+		remove_filter(dev, id);
+}
+
 /* Verify that that the PID is supported. */
 PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported( PTR_PID_DATA pid )
 {
@@ -203,11 +211,7 @@ PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported( PTR_PID_DATA pid )
     }
 }
 
-/* Add a PID to the packet manager to be streamed. This will return   *
- * @PID_SUPPORTED_STATUS to verify if the PID was or was not added.   *
- * Upon adding a supported PID, the library will request a hardware   *
- * filter if necessary (see add_filter)                               */
-PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_PID_DATA pid )
+static PID_SUPPORTED_STATUS CAN_Sniffer_Edit_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_PID_DATA pid, uint8_t enable )
 {
 	/* Check to see if the PID can be sniffed by the library          */
 	if( CAN_Sniffer_PID_Supported( pid ) == PID_SUPPORTED )
@@ -220,112 +224,112 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_P
 
 			#if defined(SNIFF_ENGINE_RPM_PID) || !defined(LIMIT_PIDS)
 			case SNIFF_ENGINE_RPM_PID:
-				add_filter( dev, SNIFF_ENGINE_RPM_ID );
+				config_filter( dev, SNIFF_ENGINE_RPM_ID, enable );
 				pid->base_unit = PID_UNITS_RPM;
 				break;
 			#endif
 
 			#if defined(SNIFF_ACCEL_PEDAL_POS_PID) || !defined(LIMIT_PIDS)
 			case SNIFF_ACCEL_PEDAL_POS_PID:
-				add_filter( dev, SNIFF_ACCEL_PEDAL_POS_ID );
+				config_filter( dev, SNIFF_ACCEL_PEDAL_POS_ID, enable );
 				pid->base_unit = PID_UNITS_PERCENT;
 				break;
 			#endif
 
 			#if defined(SNIFF_ENGINE_OIL_TEMP_PID) || !defined(LIMIT_PIDS)
 			case SNIFF_ENGINE_OIL_TEMP_PID:
-				add_filter( dev, SNIFF_ENGINE_OIL_TEMP_ID );
+				config_filter( dev, SNIFF_ENGINE_OIL_TEMP_ID, enable );
 				pid->base_unit = PID_UNITS_CELSIUS;
 				break;
 			#endif
 
 			#if defined(SNIFF_BOOST_PRESSURE_PID) || !defined(LIMIT_PIDS)
 			case SNIFF_BOOST_PRESSURE_PID:
-				add_filter( dev, SNIFF_BOOST_PRESSURE_ID );
+				config_filter( dev, SNIFF_BOOST_PRESSURE_ID, enable );
 				pid->base_unit = PID_UNITS_KPA;
 				break;
 			#endif
 
             #if defined(SNIFF_GAUGE_BRIGHTNESS_PID) || !defined(LIMIT_PIDS)
             case SNIFF_GAUGE_BRIGHTNESS_PID:
-                add_filter( dev, SNIFF_GAUGE_BRIGHTNESS_ID );
+                config_filter( dev, SNIFF_GAUGE_BRIGHTNESS_ID, enable );
                 pid->base_unit = PID_UNITS_PERCENT;
                 break;
             #endif
 
             #if defined(SNIFF_BRAKE_PEDAL_STATUS_PID) || !defined(LIMIT_PIDS)
             case SNIFF_BRAKE_PEDAL_STATUS_PID:
-                add_filter( dev, SNIFF_BRAKE_PEDAL_STATUS_ID );
+                config_filter( dev, SNIFF_BRAKE_PEDAL_STATUS_ID, enable );
                 pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_EMERGENCY_BRAKE_STATUS_PID) || !defined(LIMIT_PIDS)
             case SNIFF_EMERGENCY_BRAKE_STATUS_PID:
-                add_filter( dev, SNIFF_EMERGENCY_BRAKE_STATUS_ID );
+                config_filter( dev, SNIFF_EMERGENCY_BRAKE_STATUS_ID, enable );
                 pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_REVERSE_STATUS_PID) || !defined(LIMIT_PIDS)
             case SNIFF_REVERSE_STATUS_PID:
-                add_filter( dev, SNIFF_REVERSE_STATUS_ID );
+                config_filter( dev, SNIFF_REVERSE_STATUS_ID, enable );
                 pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_CRUISE_CONTROL_ON_BUTTON_PID) || !defined(LIMIT_PIDS)
             case SNIFF_CRUISE_CONTROL_ON_BUTTON_PID:
-                add_filter( dev, SNIFF_CRUISE_CONTROL_ON_BUTTON_ID );
+                config_filter( dev, SNIFF_CRUISE_CONTROL_ON_BUTTON_ID, enable );
                 pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID) || !defined(LIMIT_PIDS)
             case SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID:
-                add_filter( dev, SNIFF_CRUISE_CONTROL_OFF_BUTTON_ID );
+                config_filter( dev, SNIFF_CRUISE_CONTROL_OFF_BUTTON_ID, enable );
                 pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID) || !defined(LIMIT_PIDS)
             case SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID:
-                add_filter( dev, SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_ID );
+                config_filter( dev, SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_ID, enable );
                 pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID) || !defined(LIMIT_PIDS)
             case SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID:
-                add_filter( dev, SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_ID );
+                config_filter( dev, SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_ID, enable );
                 pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_CRUISE_CONTROL_RES_BUTTON_PID) || !defined(LIMIT_PIDS)
             case SNIFF_CRUISE_CONTROL_RES_BUTTON_PID:
-                add_filter( dev, SNIFF_CRUISE_CONTROL_RES_BUTTON_ID );
+                config_filter( dev, SNIFF_CRUISE_CONTROL_RES_BUTTON_ID, enable );
                 pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID) || !defined(LIMIT_PIDS)
             case SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID:
-                add_filter( dev, SNIFF_CRUISE_CONTROL_CAN_BUTTON_ID );
+                config_filter( dev, SNIFF_CRUISE_CONTROL_CAN_BUTTON_ID, enable );
                 pid->base_unit = PID_UNITS_NONE;
                 break;
             #endif
 
             #if defined(SNIFF_LONGITUDINAL_ACCELERATION_SUPPORTED) || !defined(LIMIT_PIDS)
             case SNIFF_LATERAL_ACCELERATION_PID:
-                add_filter( dev, SNIFF_LATERAL_ACCELERATION_ID );
+                config_filter( dev, SNIFF_LATERAL_ACCELERATION_ID, enable );
                 pid->base_unit = PID_UNITS_G_FORCE;
                 break;
             #endif
 
             #if defined(SNIFF_LONGITUDINAL_ACCELERATION_SUPPORTED) || !defined(LIMIT_PIDS)
             case SNIFF_LONGITUDINAL_ACCELERATION_PID:
-                add_filter( dev, SNIFF_LONGITUDINAL_ACCELERATION_ID );
+                config_filter( dev, SNIFF_LONGITUDINAL_ACCELERATION_ID, enable );
                 pid->base_unit = PID_UNITS_G_FORCE;
                 break;
             #endif
@@ -346,6 +350,16 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_P
 	else { return PID_NOT_SUPPORTED; }
 }
 
+/* Add a PID to the packet manager to be streamed. This will return   *
+ * @PID_SUPPORTED_STATUS to verify if the PID was or was not added.   *
+ * Upon adding a supported PID, the library will request a hardware   *
+ * filter if necessary (see add_filter)                               */
+PID_SUPPORTED_STATUS CAN_Sniffer_Add_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_PID_DATA pid )
+{
+	return CAN_Sniffer_Edit_PID(dev, pid, 1);
+}
+
+
 PID_SUPPORTED_STATUS CAN_Sniffer_Remove_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PTR_PID_DATA pid )
 {
     /* Cycle through all the PIDs to find which one must be removed */
@@ -361,6 +375,9 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Remove_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PT
                     dev->stream[i+1] = NULL;
                 }
             }
+
+            /* Remove the filter */
+            CAN_Sniffer_Edit_PID( dev, pid, 0 );
 
             /* Remove the PID */
             dev->num_pids--;
