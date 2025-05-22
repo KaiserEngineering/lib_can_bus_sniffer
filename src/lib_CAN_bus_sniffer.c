@@ -66,7 +66,31 @@ static void add_filter( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t id )
             /* Request the filter from the hardware peripheral.       *
              * TODO: Error handle, what if the hardware fails or if   *
              * the hardware runs out of mailboxes?                    */
-            dev->filter( id );
+            if( dev->filter != NULL )
+            	dev->filter( id, 1 );
+
+            return;
+        }
+    }
+}
+
+/* Removes a CAN filter from the hardware and frees its slot in the manager */
+static void remove_filter( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t id )
+{
+    if( (dev->status & CAN_SNIFF_INIT) == 0 )
+        return;
+
+    // Search for the filter ID in active filters
+    for( uint8_t i = 0; i < MAX_CAN_FILTERS; i++ )
+    {
+        if( active_filters[i] == id )
+        {
+            // Request filter removal from hardware
+            if( dev->filter != NULL )
+                dev->filter( id, 0 );
+
+            // Mark the slot as available
+            active_filters[i] = RESERVED_FILTER;
 
             return;
         }

@@ -92,7 +92,7 @@
 
 #endif
 
-typedef void (*CAN_SNIFF_FILTER)( uint16_t id );
+typedef void (*CAN_SNIFF_FILTER)( uint16_t id, uint8_t enable );
 
 typedef enum _pid_supported_status {
     PID_NOT_SUPPORTED,
