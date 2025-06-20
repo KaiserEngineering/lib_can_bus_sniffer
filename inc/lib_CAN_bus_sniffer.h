@@ -2,8 +2,8 @@
 #ifndef LIB_CAN_BUS_SNIFFER_H_
 #define LIB_CAN_BUS_SNIFFER_H_
 
-#include "stdio.h"
-#include "stdint.h"
+#include <stdio.h>
+#include <stdint.h>
 #include "lib_pid.h"
 #include "lib_unit_conversion.h"
 
