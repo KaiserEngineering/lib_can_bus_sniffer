@@ -251,7 +251,7 @@ static PID_SUPPORTED_STATUS CAN_Sniffer_Edit_PID( PCAN_SNIFFER_PACKET_MANAGER de
 			#endif
 
             #if defined(SNIFF_GAUGE_BRIGHTNESS_PID) || !defined(LIMIT_PIDS)
-            case SNIFF_GAUGE_BRIGHTNESS_PID:
+            case SNIFF_GAUGE_ILLUM_LEVEL_PID:
                 config_filter( dev, SNIFF_GAUGE_BRIGHTNESS_ID, enable );
                 pid->base_unit = PID_UNITS_PERCENT;
                 break;
@@ -420,7 +420,7 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 				case 0x080:
 
 					/* Accelerator Pedal */
-					if( dev->stream[i]->pid_uuid == MODE1_RELATIVE_ACCELERATOR_PEDAL_POSITION_UUID ) {
+					if( dev->stream[i]->pid_uuid == MODE1_ACCEL_PEDAL_POS_UUID ) {
 						dev->stream[i]->pid_value = (float)(((uint32_t)(data[0] & 0x3) << 8) | (uint32_t)(data[1])) / (float)10;
 						process_change(dev->stream[i]);
 					}
@@ -444,13 +444,13 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                     defined(SNIFF_BOOST_PRESSURE_PID)
 				case 0x0F8:
 					/* Engine Oil Temperature */
-					if( dev->stream[i]->pid_uuid == MODE1_ENGINE_OIL_TEMPERATURE_UUID ) {
+					if( dev->stream[i]->pid_uuid == MODE1_OIL_TEMP_UUID ) {
 					    dev->stream[i]->pid_value = (float)data[7] - (float)60;
 					    process_change(dev->stream[i]);
 					}
 
 					/* Boost Pressure */
-					else if( dev->stream[i]->pid_uuid == MODE1_TURBOCHARGER_COMPRESSOR_INLET_PRESSURE_UUID ) {
+					else if( dev->stream[i]->pid_uuid == MODE1_BOOST_PID ) {
 						dev->stream[i]->pid_value = (float)data[5];
 						process_change(dev->stream[i]);
 					}
@@ -463,7 +463,7 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 				case 0x0C8:
 
 				    /* Gauge Brightness */
-				    if( dev->stream[i]->pid_uuid == SNIFF_GAUGE_BRIGHTNESS_UUID ) {
+				    if( dev->stream[i]->pid_uuid == SNIFF_GAUGE_ILLUM_LEVEL_UUID ) {
 				        dev->stream[i]->pid_value = (float)(data[0] & 0x1F);
 				        process_change(dev->stream[i]);
 				    }
