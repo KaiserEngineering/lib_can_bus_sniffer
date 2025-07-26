@@ -458,7 +458,7 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 					break;
                 #endif
 
-                #if defined(SNIFF_GAUGE_BRIGHTNESS_PID) || \
+                #if defined(SNIFF_GAUGE_ILLUM_LEVEL_UUID) || \
 					defined(SNIFF_EMERGENCY_BRAKE_STATUS_PID)
 				case 0x0C8:
 
