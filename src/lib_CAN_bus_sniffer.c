@@ -106,108 +106,86 @@ static void config_filter( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t id, uint8_t
 }
 
 /* Verify that that the PID is supported. */
-PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported( PTR_PID_DATA pid )
+PID_SUPPORTED_STATUS CAN_Sniffer_PID_Supported(PTR_PID_DATA pid)
 {
-    switch( get_mode_by_uuid(pid->pid_uuid) )
+    switch (pid->pid_uuid)
     {
-        case MODE1:
-            switch( get_pid_by_uuid(pid->pid_uuid) )
-            {
-                #ifdef FORD_FOCUS_STRS_2013_2018
+        #ifdef FORD_FOCUS_STRS_2013_2018
 
-                #ifdef SNIFF_ENGINE_RPM_PID
-                case SNIFF_ENGINE_RPM_PID:
-                #endif
+        #ifdef SNIFF_ENGINE_SPEED_UUID
+        case SNIFF_ENGINE_SPEED_UUID:
+        #endif
 
-                #ifdef SNIFF_ACCEL_PEDAL_POS_PID
-                case SNIFF_ACCEL_PEDAL_POS_PID:
-                #endif
+        #ifdef MODE1_ENGINE_SPEED_UUID
+        case MODE1_ENGINE_SPEED_UUID:
+        #endif
 
-                #ifdef SNIFF_ENGINE_OIL_TEMP_PID
-                case SNIFF_ENGINE_OIL_TEMP_PID:
-                #endif
+        #ifdef MODE1_ACCEL_PEDAL_POS_UUID
+        case MODE1_ACCEL_PEDAL_POS_UUID:
+        #endif
 
-                #ifdef SNIFF_BOOST_PRESSURE_PID
-                case SNIFF_BOOST_PRESSURE_PID:
-                #endif
+        #ifdef MODE1_OIL_TEMP_UUID
+        case MODE1_OIL_TEMP_UUID:
+        #endif
 
-                #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
-                case SNIFF_GAUGE_BRIGHTNESS_PID:
-                #endif
-                    return PID_SUPPORTED;
+        #ifdef MODE1_BOOST_UUID
+        case MODE1_BOOST_UUID:
+        #endif
 
-                #endif
+        #ifdef SNIFF_GAUGE_ILLUM_LEVEL_UUID
+        case SNIFF_GAUGE_ILLUM_LEVEL_UUID:
+        #endif
 
-                default:
-                    return PID_NOT_SUPPORTED;
-            }
-            break;
+        #ifdef SNIFF_BRAKE_PEDAL_STATUS_UUID
+        case SNIFF_BRAKE_PEDAL_STATUS_UUID:
+        #endif
 
-            case SNIFF:
-                switch( get_pid_by_uuid(pid->pid_uuid) )
-                {
-                    #ifdef FORD_FOCUS_STRS_2013_2018
+        #ifdef SNIFF_EMERGENCY_BRAKE_STATUS_UUID
+        case SNIFF_EMERGENCY_BRAKE_STATUS_UUID:
+        #endif
 
-                    #ifdef SNIFF_GAUGE_BRIGHTNESS_PID
-                    case SNIFF_GAUGE_BRIGHTNESS_PID:
-                    #endif
+        #ifdef SNIFF_REVERSE_STATUS_UUID
+        case SNIFF_REVERSE_STATUS_UUID:
+        #endif
 
-                    #ifdef SNIFF_BRAKE_PEDAL_STATUS_PID
-                    case SNIFF_BRAKE_PEDAL_STATUS_PID:
-                    #endif
+        #ifdef SNIFF_CRUISE_CONTROL_ON_BUTTON_UUID
+        case SNIFF_CRUISE_CONTROL_ON_BUTTON_UUID:
+        #endif
 
-                    #ifdef SNIFF_EMERGENCY_BRAKE_STATUS_PID
-                    case SNIFF_EMERGENCY_BRAKE_STATUS_PID:
-                    #endif
+        #ifdef SNIFF_CRUISE_CONTROL_OFF_BUTTON_UUID
+        case SNIFF_CRUISE_CONTROL_OFF_BUTTON_UUID:
+        #endif
 
-                    #ifdef SNIFF_REVERSE_STATUS_PID
-                    case SNIFF_REVERSE_STATUS_PID:
-                    #endif
+        #ifdef SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_UUID
+        case SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_UUID:
+        #endif
 
-                    #ifdef SNIFF_CRUISE_CONTROL_ON_BUTTON_PID
-                    case SNIFF_CRUISE_CONTROL_ON_BUTTON_PID:
-                    #endif
+        #ifdef SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_UUID
+        case SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_UUID:
+        #endif
 
-                    #ifdef SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID
-                    case SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID:
-                    #endif
+        #ifdef SNIFF_CRUISE_CONTROL_RES_BUTTON_UUID
+        case SNIFF_CRUISE_CONTROL_RES_BUTTON_UUID:
+        #endif
 
-                    #ifdef SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID
-                    case SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID:
-                    #endif
+        #ifdef SNIFF_CRUISE_CONTROL_CAN_BUTTON_UUID
+        case SNIFF_CRUISE_CONTROL_CAN_BUTTON_UUID:
+        #endif
 
-                    #ifdef SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID
-                    case SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID:
-                    #endif
+        #ifdef SNIFF_LATERAL_ACCELERATION_UUID
+        case SNIFF_LATERAL_ACCELERATION_UUID:
+        #endif
 
-                    #ifdef SNIFF_CRUISE_CONTROL_RES_BUTTON_PID
-                    case SNIFF_CRUISE_CONTROL_RES_BUTTON_PID:
-                    #endif
+        #ifdef SNIFF_LONGITUDINAL_ACCELERATION_UUID
+        case SNIFF_LONGITUDINAL_ACCELERATION_UUID:
+        #endif
 
-                    #ifdef SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID
-                    case SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID:
-                    #endif
+            return PID_SUPPORTED;
 
-                    #ifdef SNIFF_LATERAL_ACCELERATION_PID
-                    case SNIFF_LATERAL_ACCELERATION_PID:
-                    #endif
+        #endif // FORD_FOCUS_STRS_2013_2018
 
-                    #ifdef SNIFF_LONGITUDINAL_ACCELERATION_PID
-                    case SNIFF_LONGITUDINAL_ACCELERATION_PID:
-                    #endif
-
-                        return PID_SUPPORTED;
-
-                    #endif
-
-                    default:
-                        return PID_NOT_SUPPORTED;
-                }
-                break;
-
-            default:
-                return PID_NOT_SUPPORTED;
-
+        default:
+            return PID_NOT_SUPPORTED;
     }
 }
 
@@ -218,123 +196,87 @@ static PID_SUPPORTED_STATUS CAN_Sniffer_Edit_PID( PCAN_SNIFFER_PACKET_MANAGER de
 	{
 		/* Determine what arbitration ID needs to be monitored to     *
 		 * obtain the PID data.	                                      */
-		switch( get_pid_by_uuid(pid->pid_uuid) )
+		switch (pid->pid_uuid)
 		{
-            #ifdef FORD_FOCUS_STRS_2013_2018
+		    case MODE1_ENGINE_SPEED_UUID: // SNIFF_ENGINE_RPM_UUID
+		        config_filter(dev, SNIFF_ENGINE_RPM_ID, enable);
+		        pid->base_unit = PID_UNITS_RPM;
+		        break;
 
-			#if defined(SNIFF_ENGINE_RPM_PID) || !defined(LIMIT_PIDS)
-			case SNIFF_ENGINE_RPM_PID:
-				config_filter( dev, SNIFF_ENGINE_RPM_ID, enable );
-				pid->base_unit = PID_UNITS_RPM;
-				break;
-			#endif
+		    case MODE1_ACCEL_PEDAL_POS_UUID: // SNIFF_ACCEL_PEDAL_POS_UUID
+		        config_filter(dev, SNIFF_ACCEL_PEDAL_POS_ID, enable);
+		        pid->base_unit = PID_UNITS_PERCENT;
+		        break;
 
-			#if defined(SNIFF_ACCEL_PEDAL_POS_PID) || !defined(LIMIT_PIDS)
-			case SNIFF_ACCEL_PEDAL_POS_PID:
-				config_filter( dev, SNIFF_ACCEL_PEDAL_POS_ID, enable );
-				pid->base_unit = PID_UNITS_PERCENT;
-				break;
-			#endif
+		    case MODE1_OIL_TEMP_UUID: // SNIFF_ENGINE_OIL_TEMP_UUID
+		        config_filter(dev, SNIFF_ENGINE_OIL_TEMP_ID, enable);
+		        pid->base_unit = PID_UNITS_CELSIUS;
+		        break;
 
-			#if defined(SNIFF_ENGINE_OIL_TEMP_PID) || !defined(LIMIT_PIDS)
-			case SNIFF_ENGINE_OIL_TEMP_PID:
-				config_filter( dev, SNIFF_ENGINE_OIL_TEMP_ID, enable );
-				pid->base_unit = PID_UNITS_CELSIUS;
-				break;
-			#endif
+		    case MODE1_BOOST_UUID: // SNIFF_BOOST_PRESSURE_UUID
+		        config_filter(dev, SNIFF_BOOST_PRESSURE_ID, enable);
+		        pid->base_unit = PID_UNITS_KPA;
+		        break;
 
-			#if defined(SNIFF_BOOST_PRESSURE_PID) || !defined(LIMIT_PIDS)
-			case SNIFF_BOOST_PRESSURE_PID:
-				config_filter( dev, SNIFF_BOOST_PRESSURE_ID, enable );
-				pid->base_unit = PID_UNITS_KPA;
-				break;
-			#endif
+		    case SNIFF_GAUGE_ILLUM_LEVEL_UUID: // SNIFF_GAUGE_BRIGHTNESS_UUID
+		        config_filter(dev, SNIFF_GAUGE_BRIGHTNESS_ID, enable);
+		        pid->base_unit = PID_UNITS_PERCENT;
+		        break;
 
-            #if defined(SNIFF_GAUGE_BRIGHTNESS_PID) || !defined(LIMIT_PIDS)
-            case SNIFF_GAUGE_ILLUM_LEVEL_PID:
-                config_filter( dev, SNIFF_GAUGE_BRIGHTNESS_ID, enable );
-                pid->base_unit = PID_UNITS_PERCENT;
-                break;
-            #endif
+		    case SNIFF_BRAKE_PEDAL_STATUS_UUID:
+		        config_filter(dev, SNIFF_BRAKE_PEDAL_STATUS_ID, enable);
+		        pid->base_unit = PID_UNITS_NONE;
+		        break;
 
-            #if defined(SNIFF_BRAKE_PEDAL_STATUS_PID) || !defined(LIMIT_PIDS)
-            case SNIFF_BRAKE_PEDAL_STATUS_PID:
-                config_filter( dev, SNIFF_BRAKE_PEDAL_STATUS_ID, enable );
-                pid->base_unit = PID_UNITS_NONE;
-                break;
-            #endif
+		    case SNIFF_EMERGENCY_BRAKE_STATUS_UUID:
+		        config_filter(dev, SNIFF_EMERGENCY_BRAKE_STATUS_ID, enable);
+		        pid->base_unit = PID_UNITS_NONE;
+		        break;
 
-            #if defined(SNIFF_EMERGENCY_BRAKE_STATUS_PID) || !defined(LIMIT_PIDS)
-            case SNIFF_EMERGENCY_BRAKE_STATUS_PID:
-                config_filter( dev, SNIFF_EMERGENCY_BRAKE_STATUS_ID, enable );
-                pid->base_unit = PID_UNITS_NONE;
-                break;
-            #endif
+		    case SNIFF_REVERSE_STATUS_UUID:
+		        config_filter(dev, SNIFF_REVERSE_STATUS_ID, enable);
+		        pid->base_unit = PID_UNITS_NONE;
+		        break;
 
-            #if defined(SNIFF_REVERSE_STATUS_PID) || !defined(LIMIT_PIDS)
-            case SNIFF_REVERSE_STATUS_PID:
-                config_filter( dev, SNIFF_REVERSE_STATUS_ID, enable );
-                pid->base_unit = PID_UNITS_NONE;
-                break;
-            #endif
+		    case SNIFF_CRUISE_CONTROL_ON_BUTTON_UUID:
+		        config_filter(dev, SNIFF_CRUISE_CONTROL_ON_BUTTON_ID, enable);
+		        pid->base_unit = PID_UNITS_NONE;
+		        break;
 
-            #if defined(SNIFF_CRUISE_CONTROL_ON_BUTTON_PID) || !defined(LIMIT_PIDS)
-            case SNIFF_CRUISE_CONTROL_ON_BUTTON_PID:
-                config_filter( dev, SNIFF_CRUISE_CONTROL_ON_BUTTON_ID, enable );
-                pid->base_unit = PID_UNITS_NONE;
-                break;
-            #endif
+		    case SNIFF_CRUISE_CONTROL_OFF_BUTTON_UUID:
+		        config_filter(dev, SNIFF_CRUISE_CONTROL_OFF_BUTTON_ID, enable);
+		        pid->base_unit = PID_UNITS_NONE;
+		        break;
 
-            #if defined(SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID) || !defined(LIMIT_PIDS)
-            case SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID:
-                config_filter( dev, SNIFF_CRUISE_CONTROL_OFF_BUTTON_ID, enable );
-                pid->base_unit = PID_UNITS_NONE;
-                break;
-            #endif
+		    case SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_UUID:
+		        config_filter(dev, SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_ID, enable);
+		        pid->base_unit = PID_UNITS_NONE;
+		        break;
 
-            #if defined(SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID) || !defined(LIMIT_PIDS)
-            case SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID:
-                config_filter( dev, SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_ID, enable );
-                pid->base_unit = PID_UNITS_NONE;
-                break;
-            #endif
+		    case SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_UUID:
+		        config_filter(dev, SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_ID, enable);
+		        pid->base_unit = PID_UNITS_NONE;
+		        break;
 
-            #if defined(SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID) || !defined(LIMIT_PIDS)
-            case SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID:
-                config_filter( dev, SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_ID, enable );
-                pid->base_unit = PID_UNITS_NONE;
-                break;
-            #endif
+		    case SNIFF_CRUISE_CONTROL_RES_BUTTON_UUID:
+		        config_filter(dev, SNIFF_CRUISE_CONTROL_RES_BUTTON_ID, enable);
+		        pid->base_unit = PID_UNITS_NONE;
+		        break;
 
-            #if defined(SNIFF_CRUISE_CONTROL_RES_BUTTON_PID) || !defined(LIMIT_PIDS)
-            case SNIFF_CRUISE_CONTROL_RES_BUTTON_PID:
-                config_filter( dev, SNIFF_CRUISE_CONTROL_RES_BUTTON_ID, enable );
-                pid->base_unit = PID_UNITS_NONE;
-                break;
-            #endif
+		    case SNIFF_CRUISE_CONTROL_CAN_BUTTON_UUID:
+		        config_filter(dev, SNIFF_CRUISE_CONTROL_CAN_BUTTON_ID, enable);
+		        pid->base_unit = PID_UNITS_NONE;
+		        break;
 
-            #if defined(SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID) || !defined(LIMIT_PIDS)
-            case SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID:
-                config_filter( dev, SNIFF_CRUISE_CONTROL_CAN_BUTTON_ID, enable );
-                pid->base_unit = PID_UNITS_NONE;
-                break;
-            #endif
+		    case SNIFF_LATERAL_ACCELERATION_UUID:
+		        config_filter(dev, SNIFF_LATERAL_ACCELERATION_ID, enable);
+		        pid->base_unit = PID_UNITS_G_FORCE;
+		        break;
 
-            #if defined(SNIFF_LONGITUDINAL_ACCELERATION_SUPPORTED) || !defined(LIMIT_PIDS)
-            case SNIFF_LATERAL_ACCELERATION_PID:
-                config_filter( dev, SNIFF_LATERAL_ACCELERATION_ID, enable );
-                pid->base_unit = PID_UNITS_G_FORCE;
-                break;
-            #endif
-
-            #if defined(SNIFF_LONGITUDINAL_ACCELERATION_SUPPORTED) || !defined(LIMIT_PIDS)
-            case SNIFF_LONGITUDINAL_ACCELERATION_PID:
-                config_filter( dev, SNIFF_LONGITUDINAL_ACCELERATION_ID, enable );
-                pid->base_unit = PID_UNITS_G_FORCE;
-                break;
-            #endif
-
-            #endif
+		    case SNIFF_LONGITUDINAL_ACCELERATION_UUID:
+		        config_filter(dev, SNIFF_LONGITUDINAL_ACCELERATION_ID, enable);
+		        pid->base_unit = PID_UNITS_G_FORCE;
+		        break;
 		}
 
 		dev->stream[dev->num_pids] = pid;
@@ -402,9 +344,6 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
     	{
 			switch( arbitration_id )
 			{
-                #ifdef FORD_FOCUS_STRS_2013_2018
-
-                #ifdef SNIFF_ENGINE_RPM_PID
 				case 0x090:
 					/* Engine RPM */
 					if( dev->stream[i]->pid_uuid == MODE1_ENGINE_SPEED_UUID ) {
@@ -412,13 +351,8 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 						process_change(dev->stream[i]);
 					}
 					break;
-                #endif
 
-                #if defined(SNIFF_ACCEL_PEDAL_POS_PID)    || \
-                    defined(SNIFF_BRAKE_PEDAL_STATUS_PID) || \
-                    defined(SNIFF_REVERSE_STATUS_PID)
 				case 0x080:
-
 					/* Accelerator Pedal */
 					if( dev->stream[i]->pid_uuid == MODE1_ACCEL_PEDAL_POS_UUID ) {
 						dev->stream[i]->pid_value = (float)(((uint32_t)(data[0] & 0x3) << 8) | (uint32_t)(data[1])) / (float)10;
@@ -438,10 +372,7 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                     }
 
 					break;
-                #endif
 
-                #if defined(SNIFF_ENGINE_OIL_TEMP_PID) || \
-                    defined(SNIFF_BOOST_PRESSURE_PID)
 				case 0x0F8:
 					/* Engine Oil Temperature */
 					if( dev->stream[i]->pid_uuid == MODE1_OIL_TEMP_UUID ) {
@@ -456,10 +387,7 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 					}
 
 					break;
-                #endif
 
-                #if defined(SNIFF_GAUGE_ILLUM_LEVEL_UUID) || \
-					defined(SNIFF_EMERGENCY_BRAKE_STATUS_PID)
 				case 0x0C8:
 
 				    /* Gauge Brightness */
@@ -475,14 +403,7 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                     }
 
 				    break;
-                #endif
 
-                #if defined(SNIFF_CRUISE_CONTROL_ON_BUTTON_PID)        || \
-                    defined(SNIFF_CRUISE_CONTROL_OFF_BUTTON_PID)       || \
-                    defined(SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_PID)  || \
-                    defined(SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_PID) || \
-                    defined(SNIFF_CRUISE_CONTROL_RES_BUTTON_PID)       || \
-                    defined(SNIFF_CRUISE_CONTROL_CAN_BUTTON_PID)
                 case 0x030:
 
                     /* Cruise Control ON button Status */
@@ -522,9 +443,7 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                     }
 
                     break;
-                #endif
 
-                #ifdef SNIFF_LONGITUDINAL_ACCELERATION_PID
                 case 0x160:
                     /* Longitudinal Acceleration */
                     if( dev->stream[i]->pid_uuid == SNIFF_LONGITUDINAL_ACCELERATION_UUID ) {
@@ -534,9 +453,7 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                         }
                     }
                     break;
-                #endif
 
-                #ifdef SNIFF_LATERAL_ACCELERATION_PID
                 case 0x180:
                     /* Lateral Acceleration */
                     if( dev->stream[i]->pid_uuid == SNIFF_LATERAL_ACCELERATION_UUID ) {
@@ -546,9 +463,6 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                         }
                     }
                     break;
-                #endif
-
-                #endif
 
                 default:
                     break;
