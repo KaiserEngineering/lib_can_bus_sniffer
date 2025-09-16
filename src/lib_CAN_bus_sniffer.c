@@ -381,7 +381,7 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 					}
 
 					/* Boost Pressure */
-					else if( dev->stream[i]->pid_uuid == MODE1_BOOST_PID ) {
+					else if( dev->stream[i]->pid_uuid == MODE1_BOOST_UUID ) {
 						dev->stream[i]->pid_value = (float)data[5];
 						process_change(dev->stream[i]);
 					}
