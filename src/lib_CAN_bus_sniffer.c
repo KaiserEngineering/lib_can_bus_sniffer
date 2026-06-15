@@ -200,84 +200,68 @@ static PID_SUPPORTED_STATUS CAN_Sniffer_Edit_PID( PCAN_SNIFFER_PACKET_MANAGER de
 		{
 		    case MODE1_ENGINE_SPEED_UUID: // SNIFF_ENGINE_RPM_UUID
 		        config_filter(dev, SNIFF_ENGINE_RPM_ID, enable);
-		        pid->base_unit = PID_UNITS_RPM;
 		        break;
 
 		    case MODE1_ACCEL_PEDAL_POS_UUID: // SNIFF_ACCEL_PEDAL_POS_UUID
 		        config_filter(dev, SNIFF_ACCEL_PEDAL_POS_ID, enable);
-		        pid->base_unit = PID_UNITS_PERCENT;
 		        break;
 
 		    case MODE1_OIL_TEMP_UUID: // SNIFF_ENGINE_OIL_TEMP_UUID
 		        config_filter(dev, SNIFF_ENGINE_OIL_TEMP_ID, enable);
-		        pid->base_unit = PID_UNITS_CELSIUS;
 		        break;
 
 		    case MODE1_BOOST_UUID: // SNIFF_BOOST_PRESSURE_UUID
 		        config_filter(dev, SNIFF_BOOST_PRESSURE_ID, enable);
-		        pid->base_unit = PID_UNITS_KPA;
 		        break;
 
 		    case SNIFF_GAUGE_ILLUM_LEVEL_UUID: // SNIFF_GAUGE_BRIGHTNESS_UUID
 		        config_filter(dev, SNIFF_GAUGE_BRIGHTNESS_ID, enable);
-		        pid->base_unit = PID_UNITS_PERCENT;
 		        break;
 
 		    case SNIFF_BRAKE_PEDAL_STATUS_UUID:
 		        config_filter(dev, SNIFF_BRAKE_PEDAL_STATUS_ID, enable);
-		        pid->base_unit = PID_UNITS_NONE;
 		        break;
 
 		    case SNIFF_EMERGENCY_BRAKE_STATUS_UUID:
 		        config_filter(dev, SNIFF_EMERGENCY_BRAKE_STATUS_ID, enable);
-		        pid->base_unit = PID_UNITS_NONE;
 		        break;
 
 		    case SNIFF_REVERSE_STATUS_UUID:
 		        config_filter(dev, SNIFF_REVERSE_STATUS_ID, enable);
-		        pid->base_unit = PID_UNITS_NONE;
 		        break;
 
 		    case SNIFF_CRUISE_CONTROL_ON_BUTTON_UUID:
 		        config_filter(dev, SNIFF_CRUISE_CONTROL_ON_BUTTON_ID, enable);
-		        pid->base_unit = PID_UNITS_NONE;
 		        break;
 
 		    case SNIFF_CRUISE_CONTROL_OFF_BUTTON_UUID:
 		        config_filter(dev, SNIFF_CRUISE_CONTROL_OFF_BUTTON_ID, enable);
-		        pid->base_unit = PID_UNITS_NONE;
 		        break;
 
 		    case SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_UUID:
 		        config_filter(dev, SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_ID, enable);
-		        pid->base_unit = PID_UNITS_NONE;
 		        break;
 
 		    case SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_UUID:
 		        config_filter(dev, SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_ID, enable);
-		        pid->base_unit = PID_UNITS_NONE;
 		        break;
 
 		    case SNIFF_CRUISE_CONTROL_RES_BUTTON_UUID:
 		        config_filter(dev, SNIFF_CRUISE_CONTROL_RES_BUTTON_ID, enable);
-		        pid->base_unit = PID_UNITS_NONE;
 		        break;
 
 		    case SNIFF_CRUISE_CONTROL_CAN_BUTTON_UUID:
 		        config_filter(dev, SNIFF_CRUISE_CONTROL_CAN_BUTTON_ID, enable);
-		        pid->base_unit = PID_UNITS_NONE;
 		        break;
 
 		    case SNIFF_LATERAL_ACCELERATION_UUID:
 		        config_filter(dev, SNIFF_LATERAL_ACCELERATION_ID, enable);
-		        pid->base_unit = PID_UNITS_G_FORCE;
 		        break;
 
 		    case SNIFF_LONGITUDINAL_ACCELERATION_UUID:
 		        config_filter(dev, SNIFF_LONGITUDINAL_ACCELERATION_ID, enable);
-		        pid->base_unit = PID_UNITS_G_FORCE;
 		        break;
-		}
+	}
 
 		dev->stream[dev->num_pids] = pid;
 
@@ -329,14 +313,14 @@ PID_SUPPORTED_STATUS CAN_Sniffer_Remove_PID( PCAN_SNIFFER_PACKET_MANAGER dev, PT
     return PID_SUPPORTED;
 }
 
-static void process_change( PTR_PID_DATA pid )
+static void process_change( PTR_PID_DATA pid, float value )
 {
-	pid->timestamp = sniffer_tick;
-	convert_units( pid->base_unit, pid->pid_unit, &pid->pid_value);
+	update_pid_data(pid, value, sniffer_tick);
 }
 
 void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitration_id, uint8_t* data )
 {
+	float temp_value = 0;
 	/* Check all of the PIDs */
     for( uint8_t i = 0; i < dev->num_pids; i++ )
     {
@@ -347,28 +331,28 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 				case 0x090:
 					/* Engine RPM */
 					if( dev->stream[i]->pid_uuid == MODE1_ENGINE_SPEED_UUID ) {
-						dev->stream[i]->pid_value = (float)(((uint32_t)(data[4] & 0xF) << 8) | (uint32_t)(data[5])) * (float)2;
-						process_change(dev->stream[i]);
+						temp_value = (float)(((uint32_t)(data[4] & 0xF) << 8) | (uint32_t)(data[5])) * (float)2;
+						process_change(dev->stream[i], temp_value);
 					}
 					break;
 
 				case 0x080:
 					/* Accelerator Pedal */
 					if( dev->stream[i]->pid_uuid == MODE1_ACCEL_PEDAL_POS_UUID ) {
-						dev->stream[i]->pid_value = (float)(((uint32_t)(data[0] & 0x3) << 8) | (uint32_t)(data[1])) / (float)10;
-						process_change(dev->stream[i]);
+						temp_value = (float)(((uint32_t)(data[0] & 0x3) << 8) | (uint32_t)(data[1])) / (float)10;
+						process_change(dev->stream[i], temp_value);
 					}
 
 					/* Brake Pedal Status */
 					else if( dev->stream[i]->pid_uuid == SNIFF_BRAKE_PEDAL_STATUS_UUID ) {
-                        dev->stream[i]->pid_value = (float)((data[0] & 0x04) > 0);
-                        process_change(dev->stream[i]);
+                        temp_value = (float)((data[0] & 0x04) > 0);
+                        process_change(dev->stream[i], temp_value);
 					}
 
                     /* Reverse Status */
                     else if( dev->stream[i]->pid_uuid == SNIFF_REVERSE_STATUS_UUID ) {
-                        dev->stream[i]->pid_value = (float)((data[0] & 0x20) > 0);
-                        process_change(dev->stream[i]);
+                        temp_value = (float)((data[0] & 0x20) > 0);
+                        process_change(dev->stream[i], temp_value);
                     }
 
 					break;
@@ -376,14 +360,14 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 				case 0x0F8:
 					/* Engine Oil Temperature */
 					if( dev->stream[i]->pid_uuid == MODE1_OIL_TEMP_UUID ) {
-					    dev->stream[i]->pid_value = (float)data[7] - (float)60;
-					    process_change(dev->stream[i]);
+					    temp_value = (float)data[7] - (float)60;
+					    process_change(dev->stream[i], temp_value);
 					}
 
 					/* Boost Pressure */
 					else if( dev->stream[i]->pid_uuid == MODE1_BOOST_UUID ) {
-						dev->stream[i]->pid_value = (float)data[5];
-						process_change(dev->stream[i]);
+						temp_value = (float)data[5];
+						process_change(dev->stream[i], temp_value);
 					}
 
 					break;
@@ -392,14 +376,14 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 
 				    /* Gauge Brightness */
 				    if( dev->stream[i]->pid_uuid == SNIFF_GAUGE_ILLUM_LEVEL_UUID ) {
-				        dev->stream[i]->pid_value = (float)(data[0] & 0x1F);
-				        process_change(dev->stream[i]);
+				        temp_value = (float)(data[0] & 0x1F);
+				        process_change(dev->stream[i], temp_value);
 				    }
 
                     /* E-brake Status */
                     else if( dev->stream[i]->pid_uuid == SNIFF_EMERGENCY_BRAKE_STATUS_UUID ) {
-                        dev->stream[i]->pid_value = (float)((data[3] & 0x40) > 0);
-                        process_change(dev->stream[i]);
+                        temp_value = (float)((data[3] & 0x40) > 0);
+                        process_change(dev->stream[i], temp_value);
                     }
 
 				    break;
@@ -408,38 +392,38 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 
                     /* Cruise Control ON button Status */
                     if( dev->stream[i]->pid_uuid == SNIFF_CRUISE_CONTROL_ON_BUTTON_UUID ) {
-                        dev->stream[i]->pid_value = (float)((data[5] & 0x01) > 0);
-                        process_change(dev->stream[i]);
+                        temp_value = (float)((data[5] & 0x01) > 0);
+                        process_change(dev->stream[i], temp_value);
                     }
 
                     /* Cruise Control OFF Button Status */
                     else if( dev->stream[i]->pid_uuid == SNIFF_CRUISE_CONTROL_OFF_BUTTON_UUID ) {
-                        dev->stream[i]->pid_value = (float)((data[5] & 0x02) > 0);
-                        process_change(dev->stream[i]);
+                        temp_value = (float)((data[5] & 0x02) > 0);
+                        process_change(dev->stream[i], temp_value);
                     }
 
                     /* Cruise Control SET+ Button Status */
                     else if( dev->stream[i]->pid_uuid == SNIFF_CRUISE_CONTROL_SET_PLUS_BUTTON_UUID ) {
-                        dev->stream[i]->pid_value = (float)((data[5] & 0x80) > 0);
-                        process_change(dev->stream[i]);
+                        temp_value = (float)((data[5] & 0x80) > 0);
+                        process_change(dev->stream[i], temp_value);
                     }
 
                     /* Cruise Control SET- Button Status */
                     else if( dev->stream[i]->pid_uuid == SNIFF_CRUISE_CONTROL_SET_MINUS_BUTTON_UUID ) {
-                        dev->stream[i]->pid_value = (float)((data[4] & 0x01) > 0);
-                        process_change(dev->stream[i]);
+                        temp_value = (float)((data[4] & 0x01) > 0);
+                        process_change(dev->stream[i], temp_value);
                     }
 
                     /* Cruise Control RES Button Status */
                     else if( dev->stream[i]->pid_uuid == SNIFF_CRUISE_CONTROL_RES_BUTTON_UUID ) {
-                        dev->stream[i]->pid_value = (float)((data[5] & 0x20) > 0);
-                        process_change(dev->stream[i]);
+                        temp_value = (float)((data[5] & 0x20) > 0);
+                        process_change(dev->stream[i], temp_value);
                     }
 
                     /* Cruise Control CAN Button Status */
                     else if( dev->stream[i]->pid_uuid == SNIFF_CRUISE_CONTROL_CAN_BUTTON_UUID ) {
-                        dev->stream[i]->pid_value = (float)((data[5] & 0x10) > 0);
-                        process_change(dev->stream[i]);
+                        temp_value = (float)((data[5] & 0x10) > 0);
+                        process_change(dev->stream[i], temp_value);
                     }
 
                     break;
@@ -448,8 +432,8 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                     /* Longitudinal Acceleration */
                     if( dev->stream[i]->pid_uuid == SNIFF_LONGITUDINAL_ACCELERATION_UUID ) {
                         if( ((data[6] & 0x3) != 0x3) & (data[7] != 0xFF) ) {
-                            dev->stream[i]->pid_value = (float)(((((uint32_t)(data[6] & 0x3) << 8) | (uint32_t)(data[7])) * (float)0.00390625) - 2);
-                            process_change(dev->stream[i]);
+                            temp_value = (float)(((((uint32_t)(data[6] & 0x3) << 8) | (uint32_t)(data[7])) * (float)0.00390625) - 2);
+                            process_change(dev->stream[i], temp_value);
                         }
                     }
                     break;
@@ -458,8 +442,8 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
                     /* Lateral Acceleration */
                     if( dev->stream[i]->pid_uuid == SNIFF_LATERAL_ACCELERATION_UUID ) {
                         if( ((data[2] & 0x3) != 0x3) & (data[3] != 0xFF) ) {
-                            dev->stream[i]->pid_value = (float)(((((uint32_t)(data[2] & 0x3) << 8) | (uint32_t)(data[3])) * (float)0.00390625) - 2);
-                            process_change(dev->stream[i]);
+                            temp_value = (float)(((((uint32_t)(data[2] & 0x3) << 8) | (uint32_t)(data[3])) * (float)0.00390625) - 2);
+                            process_change(dev->stream[i], temp_value);
                         }
                     }
                     break;

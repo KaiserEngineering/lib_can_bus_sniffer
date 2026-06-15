@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "lib_pid.h"
-#include "lib_unit_conversion.h"
 
 #define NUM_CAN_SNIFF 25
 
