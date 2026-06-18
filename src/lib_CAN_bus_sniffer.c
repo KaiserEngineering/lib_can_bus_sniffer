@@ -165,7 +165,7 @@ static void load_definition_entry( PCAN_SNIFFER_PACKET_MANAGER dev, cJSON *entry
     cJSON *scale = NULL;
     cJSON *offset = NULL;
     cJSON *is_signed = NULL;
-    cJSON *invalid_raw = NULL;
+    cJSON *invalid_raw_min = NULL;
     uint32_t pid_uuid = PID_UNASSIGNED;
 
     if( (dev == NULL) || (entry == NULL) || (dev->num_definitions >= CAN_SNIFF_MAX_DEFINITIONS) )
@@ -192,7 +192,7 @@ static void load_definition_entry( PCAN_SNIFFER_PACKET_MANAGER dev, cJSON *entry
     scale = cJSON_GetObjectItem(entry, "scale");
     offset = cJSON_GetObjectItem(entry, "offset");
     is_signed = cJSON_GetObjectItem(entry, "signed");
-    invalid_raw = json_item(entry, "invalidRaw", "invalid_raw");
+    invalid_raw_min = json_item(entry, "invalidRawMin", "invalid_raw_min");
 
     PCAN_SNIFF_SIGNAL_DEFINITION definition = &dev->definition[dev->num_definitions];
 
@@ -204,8 +204,8 @@ static void load_definition_entry( PCAN_SNIFFER_PACKET_MANAGER dev, cJSON *entry
     definition->is_signed = cJSON_IsTrue(is_signed);
     definition->scale = cJSON_IsNumber(scale) ? (float)scale->valuedouble : 1.0f;
     definition->offset = cJSON_IsNumber(offset) ? (float)offset->valuedouble : 0.0f;
-    definition->has_invalid_raw = cJSON_IsNumber(invalid_raw);
-    definition->invalid_raw = cJSON_IsNumber(invalid_raw) ? (uint32_t)invalid_raw->valuedouble : 0;
+    definition->has_invalid_raw_min = cJSON_IsNumber(invalid_raw_min);
+    definition->invalid_raw_min = cJSON_IsNumber(invalid_raw_min) ? (uint32_t)invalid_raw_min->valuedouble : 0;
 
     if( json_string_equals(byte_order, "motorola") || json_string_equals(byte_order, "@0") )
     {
@@ -592,7 +592,7 @@ void CAN_Sniffer_Add_Packet( PCAN_SNIFFER_PACKET_MANAGER dev, uint16_t arbitrati
 
             uint32_t raw = extract_signal_raw(data, dev->stream_definition[i]);
 
-            if( (dev->stream_definition[i]->has_invalid_raw != 0U) && (raw == dev->stream_definition[i]->invalid_raw) )
+            if( (dev->stream_definition[i]->has_invalid_raw_min != 0U) && (raw >= dev->stream_definition[i]->invalid_raw_min) )
                 continue;
 
             process_change(dev->stream[i], signal_raw_to_float(raw, dev->stream_definition[i]));

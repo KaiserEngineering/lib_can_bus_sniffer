@@ -39,8 +39,8 @@ typedef struct _can_sniff_signal_definition {
     uint8_t is_signed;
     float scale;
     float offset;
-    uint8_t has_invalid_raw;
-    uint32_t invalid_raw;
+    uint8_t has_invalid_raw_min;
+    uint32_t invalid_raw_min;
 } CAN_SNIFF_SIGNAL_DEFINITION, *PCAN_SNIFF_SIGNAL_DEFINITION;
 
 typedef struct _can_sniffer_packet_manager {
