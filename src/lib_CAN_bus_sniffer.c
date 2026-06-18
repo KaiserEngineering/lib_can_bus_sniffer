@@ -218,6 +218,7 @@ static void load_definition_entry( PCAN_SNIFFER_PACKET_MANAGER dev, cJSON *entry
         definition->byte_order = CAN_SNIFF_BYTE_ORDER_LSB0;
     }
 
+    (void)pid_metadata_register_json(entry, definition->arbitration_id);
     dev->num_definitions++;
 }
 
