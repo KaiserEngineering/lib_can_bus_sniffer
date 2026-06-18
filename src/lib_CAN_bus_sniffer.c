@@ -6,6 +6,7 @@
  * pointer value as it receives new data.                                             */
 #include "lib_CAN_bus_sniffer.h"
 #include "lib_CAN_bus_sniffer_default_json.h"
+#include "cjson_shared.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -336,13 +337,19 @@ CAN_SNIFF_JSON_STATUS CAN_Sniffer_Load_JSON( PCAN_SNIFFER_PACKET_MANAGER dev, co
     if( (dev == NULL) || (json == NULL) )
         return CAN_SNIFF_JSON_ERROR;
 
+    if( !cjson_shared_acquire() )
+        return CAN_SNIFF_JSON_ERROR;
+
     clear_streams(dev);
     dev->num_definitions = 0;
 
     cJSON *root = cJSON_Parse(json);
 
     if( root == NULL )
+    {
+        cjson_shared_release();
         return CAN_SNIFF_JSON_ERROR;
+    }
 
     if( cJSON_IsArray(root) )
     {
@@ -390,6 +397,7 @@ CAN_SNIFF_JSON_STATUS CAN_Sniffer_Load_JSON( PCAN_SNIFFER_PACKET_MANAGER dev, co
     }
 
     cJSON_Delete(root);
+    cjson_shared_release();
 
     return (dev->num_definitions > 0U) ? CAN_SNIFF_JSON_OK : CAN_SNIFF_JSON_ERROR;
 }
